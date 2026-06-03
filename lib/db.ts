@@ -50,13 +50,19 @@ const DB_KEYS = {
 
 // Get dynamic API URL depending on whether the app runs as a mobile app or a web app
 export function getApiUrl(path: string): string {
-  const isMobile = typeof window !== 'undefined' && (
-    (window as any).Capacitor || 
-    window.location.protocol.startsWith('capacitor') || 
-    window.location.hostname === 'localhost' && window.location.port === ''
-  );
+  if (typeof window === 'undefined') {
+    return path;
+  }
+
+  // Detect if running inside the native mobile app wrapper (Capacitor)
+  const isCapacitor = !!(window as any).Capacitor;
+  const isCapacitorProtocol = window.location.protocol.startsWith('capacitor');
+  const isAndroidWebView = window.location.hostname === 'localhost' && window.location.port !== '3000';
+  
+  const isMobile = isCapacitor || isCapacitorProtocol || isAndroidWebView;
+  
   const baseUrl = isMobile 
-    ? (process.env.NEXT_PUBLIC_API_URL || 'https://fix-my-street-rajapalayam.vercel.app')
+    ? (process.env.NEXT_PUBLIC_API_URL || 'http://192.168.1.33:3000')
     : '';
   return `${baseUrl}${path}`;
 }
