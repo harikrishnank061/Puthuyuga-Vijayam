@@ -22,6 +22,8 @@ export async function POST(request: Request) {
     }
 
     // Handle legacy users who registered before password was required
+    console.log('[Login Debug] Citizen found:', citizen.name, '| Has password:', !!citizen.password, '| Password hash length:', citizen.password?.length || 0);
+    
     if (!citizen.password) {
       return NextResponse.json(
         { error: 'This account was created before password support. Please register again with a password.' },

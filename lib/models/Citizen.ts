@@ -24,7 +24,13 @@ const CitizenSchema = new Schema(
   },
   {
     timestamps: false,
+    strict: false, // Allow fields not in schema to pass through (safety net)
   }
 );
 
-export default mongoose.models.Citizen || mongoose.model('Citizen', CitizenSchema);
+// Delete cached model to ensure schema changes are always picked up
+if (mongoose.models.Citizen) {
+  delete mongoose.models.Citizen;
+}
+
+export default mongoose.model('Citizen', CitizenSchema);
