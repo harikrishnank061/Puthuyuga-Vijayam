@@ -21,6 +21,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 404 });
     }
 
+    // Handle legacy users who registered before password was required
+    if (!citizen.password) {
+      return NextResponse.json(
+        { error: 'This account was created before password support. Please register again with a password.' },
+        { status: 401 }
+      );
+    }
+
     // Verify password
     const isPasswordValid = await bcrypt.compare(password, citizen.password);
     if (!isPasswordValid) {

@@ -8,7 +8,7 @@ import { useLanguage } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
-import { Eye, EyeOff, Phone, Lock, User, Users, Shield, Building2 } from 'lucide-react';
+import { Eye, EyeOff, Phone, Lock, User, Building2 } from 'lucide-react';
 
 type AuthMode = 'login' | 'register';
 
@@ -343,37 +343,11 @@ export function CitizenAuth() {
             </div>
 
             {/* Role Selector Cards */}
-            <div className="grid grid-cols-3 gap-2.5">
-              {/* Citizen Login */}
-              <button
-                type="button"
-                className="auth-role-card group"
-                onClick={() => { /* Already on citizen page */ }}
-              >
-                <div className="auth-role-icon bg-[#F2D409]/80">
-                  <Users className="h-5 w-5 text-[#8B6914]" />
-                </div>
-                <span className="text-[10px] sm:text-xs font-bold text-gray-700 leading-tight">{t('citizenLogin')}</span>
-                <span className="text-[9px] text-gray-400 font-medium leading-tight">{t('citizenLoginDesc')}</span>
-              </button>
-
-              {/* Department Login */}
-              <button
-                type="button"
-                className="auth-role-card group"
-                onClick={() => { /* future: department */ }}
-              >
-                <div className="auth-role-icon bg-red-100">
-                  <Shield className="h-5 w-5 text-[#C31F26]" />
-                </div>
-                <span className="text-[10px] sm:text-xs font-bold text-gray-700 leading-tight">{t('departmentLogin')}</span>
-                <span className="text-[9px] text-gray-400 font-medium leading-tight">{t('departmentLoginDesc')}</span>
-              </button>
-
+            <div className="flex justify-center">
               {/* Admin Login */}
               <button
                 type="button"
-                className="auth-role-card group"
+                className="auth-role-card group w-full max-w-[180px]"
                 onClick={() => router.push('/?role=admin')}
               >
                 <div className="auth-role-icon bg-red-100">

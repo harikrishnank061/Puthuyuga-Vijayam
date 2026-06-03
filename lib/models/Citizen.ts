@@ -14,7 +14,7 @@ const CitizenSchema = new Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: false,
     },
     registeredAt: {
       type: String,
