@@ -8,7 +8,7 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'FIX MY STREET - Civic Complaint Management System',
+  title: 'Puthuyugavijayam - Civic Complaint Management System',
   description: 'Report and track civic issues in your area',
   generator: 'v0.app',
   icons: {

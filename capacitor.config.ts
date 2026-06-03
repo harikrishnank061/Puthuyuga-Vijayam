@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.fixmystreet.app',
-  appName: 'Fix My Street',
+  appName: 'Puthuyugavijayam',
   webDir: 'out'
 };
 

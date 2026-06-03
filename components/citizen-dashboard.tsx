@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ReportIssueModal } from './report-issue-modal';
+import { Menu, X, Globe, LogOut, ShieldCheck, PhoneCall, Info } from 'lucide-react';
 
 export function CitizenDashboard() {
   const { currentCitizen, logoutCitizen } = useAuth();
@@ -19,6 +20,10 @@ export function CitizenDashboard() {
   const [showReportModal, setShowReportModal] = useState(false);
   const [selectedComplaint, setSelectedComplaint] = useState<Complaint | null>(null);
   const [activeTab, setActiveTab] = useState<'map' | 'list' | 'notifications'>('map');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [showAboutModal, setShowAboutModal] = useState(false);
+  const [showHelplineModal, setShowHelplineModal] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -116,29 +121,32 @@ export function CitizenDashboard() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 flag-header shadow-lg">
-        <div className="container mx-auto px-4 py-3 sm:py-4 flex flex-col sm:flex-row items-center sm:justify-between justify-center gap-3 sm:gap-4 text-center sm:text-left">
-          <div>
-            <h1 className="text-xl sm:text-2xl font-bold flag-header-text">{t('appTitle')}</h1>
-            <p className="text-xs sm:text-sm flag-header-subtext max-w-xs sm:max-w-none mx-auto">
-              {language === 'ta' ? 'ராஜபாளையம் - பொதுமக்கள் குறைதீர்வு தளம்' : 'Rajapalayam - Public Grievance Portal'}
-            </p>
-          </div>
-          <div className="flex items-center justify-center gap-2 sm:gap-3">
+        <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
             <Button
               variant="ghost"
-              size="sm"
-              onClick={toggleLanguage}
-              className="text-[#C31F26] hover:bg-[#C31F26]/10 font-bold border border-[#C31F26]/30 text-xs sm:text-sm px-2 sm:px-3 py-1 h-8"
+              size="icon"
+              onClick={() => setSidebarOpen(true)}
+              className="text-white hover:bg-white/10 h-10 w-10 flex-shrink-0"
+              title="Open Menu"
             >
-              {language === 'en' ? 'தமிழ்' : 'English'}
+              <Menu className="h-6 w-6" />
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleLogout}
-              className="text-[#C31F26] hover:bg-[#C31F26]/10 font-bold border border-[#C31F26]/30 text-xs sm:text-sm px-2 sm:px-3 py-1 h-8"
+            <div className="text-left">
+              <h1 className="text-lg sm:text-xl md:text-2xl font-bold flag-header-text tracking-tight">{t('appTitle')}</h1>
+              <p className="text-[10px] sm:text-xs flag-header-subtext hidden sm:block">
+                {language === 'ta' ? 'ராஜபாளையம் - பொதுமக்கள் குறைதீர்வு தளம்' : 'Rajapalayam - Public Grievance Portal'}
+              </p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <Button 
+              onClick={() => setShowReportModal(true)} 
+              size="sm" 
+              className="bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-2.5 sm:px-4 py-1.5 h-9"
             >
-              {t('logout')}
+              🔴 <span className="hidden xs:inline ml-1">{t('reportNewIssue')}</span>
             </Button>
           </div>
         </div>
@@ -375,6 +383,212 @@ export function CitizenDashboard() {
           </div>
         )}
       </main>
+
+      {/* Sidebar Drawer */}
+      {sidebarOpen && (
+        <>
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black/60 z-[999] transition-opacity" 
+            onClick={() => setSidebarOpen(false)}
+            style={{ zIndex: 999 }}
+          />
+          
+          {/* Drawer Content */}
+          <div className="fixed inset-y-0 left-0 w-80 max-w-[85vw] bg-card text-card-foreground z-[1000] flex flex-col shadow-2xl transition-all duration-300 transform translate-x-0" style={{ zIndex: 1000 }}>
+            {/* Drawer Header */}
+            <div className="p-5 border-b border-border flex items-center justify-between bg-primary/5">
+              <div>
+                <h2 className="text-xl font-bold text-primary tracking-tight">{t('appTitle')}</h2>
+                <p className="text-[10px] text-muted-foreground mt-0.5">
+                  {language === 'ta' ? 'ராஜபாளையம் நகராட்சி' : 'Rajapalayam Municipality'}
+                </p>
+              </div>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={() => setSidebarOpen(false)}
+                className="h-8 w-8 rounded-full"
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+
+            {/* Citizen Details */}
+            <div className="p-5 border-b border-border bg-muted/40">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-lg">
+                  {currentCitizen?.name?.charAt(0).toUpperCase()}
+                </div>
+                <div className="text-left">
+                  <h4 className="font-semibold text-sm line-clamp-1">{currentCitizen?.name}</h4>
+                  <p className="text-xs text-muted-foreground font-mono mt-0.5">{currentCitizen?.mobileNumber}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Drawer Navigation Options */}
+            <div className="flex-1 py-4 overflow-y-auto px-3 space-y-1">
+              {/* Language Option */}
+              <button
+                onClick={() => {
+                  toggleLanguage();
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-accent hover:text-accent-foreground text-left text-sm font-semibold transition-colors"
+              >
+                <Globe className="h-5 w-5 text-primary" />
+                <div className="flex-1 flex justify-between items-center">
+                  <span>{t('language')}</span>
+                  <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded font-bold border border-border">
+                    {language === 'en' ? 'English' : 'தமிழ்'}
+                  </span>
+                </div>
+              </button>
+
+              {/* Official Helpline Option */}
+              <button
+                onClick={() => {
+                  setShowHelplineModal(true);
+                  setSidebarOpen(false);
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-accent hover:text-accent-foreground text-left text-sm font-semibold transition-colors"
+              >
+                <PhoneCall className="h-5 w-5 text-primary" />
+                <span>{t('officialHelpline')}</span>
+              </button>
+
+              {/* Privacy Policy Option */}
+              <button
+                onClick={() => {
+                  setShowPrivacyModal(true);
+                  setSidebarOpen(false);
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-accent hover:text-accent-foreground text-left text-sm font-semibold transition-colors"
+              >
+                <ShieldCheck className="h-5 w-5 text-primary" />
+                <span>{t('privacyPolicy')}</span>
+              </button>
+
+              {/* About App Option */}
+              <button
+                onClick={() => {
+                  setShowAboutModal(true);
+                  setSidebarOpen(false);
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-accent hover:text-accent-foreground text-left text-sm font-semibold transition-colors"
+              >
+                <Info className="h-5 w-5 text-primary" />
+                <span>{t('aboutApp')}</span>
+              </button>
+            </div>
+
+            {/* Drawer Footer (Logout) */}
+            <div className="p-4 border-t border-border">
+              <Button 
+                variant="destructive" 
+                className="w-full flex items-center justify-center gap-2 font-bold"
+                onClick={handleLogout}
+              >
+                <LogOut className="h-4 w-4" />
+                {t('logout')}
+              </Button>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Privacy Policy Modal */}
+      {showPrivacyModal && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-[9999] animate-fade-in" style={{ zIndex: 9999 }}>
+          <Card className="w-full max-w-md shadow-2xl border-primary/20">
+            <CardHeader className="bg-primary/5 rounded-t-lg">
+              <CardTitle className="text-lg flex items-center gap-2 text-primary font-bold">
+                <ShieldCheck className="h-5 w-5" />
+                {t('privacyPolicy')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-5 space-y-4">
+              <p className="text-sm text-foreground/80 leading-relaxed font-semibold text-left">
+                {t('privacyDescription')}
+              </p>
+              <div className="flex justify-end pt-2">
+                <Button onClick={() => setShowPrivacyModal(false)} className="font-bold">
+                  {t('close')}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* About App Modal */}
+      {showAboutModal && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-[9999] animate-fade-in" style={{ zIndex: 9999 }}>
+          <Card className="w-full max-w-md shadow-2xl border-primary/20">
+            <CardHeader className="bg-primary/5 rounded-t-lg">
+              <CardTitle className="text-lg flex items-center gap-2 text-primary font-bold">
+                <Info className="h-5 w-5" />
+                {t('aboutApp')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-5 space-y-4">
+              <p className="text-sm text-foreground/80 leading-relaxed font-semibold text-left">
+                {t('aboutDescription')}
+              </p>
+              <div className="mt-2 p-3 bg-muted rounded text-xs text-muted-foreground space-y-1 text-left">
+                <p><strong>Version:</strong> 1.0.0 (Capacitor Build)</p>
+                <p><strong>Developer:</strong> Rajapalayam Municipality IT Division</p>
+              </div>
+              <div className="flex justify-end pt-2">
+                <Button onClick={() => setShowAboutModal(false)} className="font-bold">
+                  {t('close')}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Helpline Modal */}
+      {showHelplineModal && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-[9999] animate-fade-in" style={{ zIndex: 9999 }}>
+          <Card className="w-full max-w-md shadow-2xl border-primary/20">
+            <CardHeader className="bg-primary/5 rounded-t-lg">
+              <CardTitle className="text-lg flex items-center gap-2 text-primary font-bold">
+                <PhoneCall className="h-5 w-5" />
+                {t('officialHelpline')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-5 space-y-4">
+              <div className="space-y-3 font-semibold">
+                <div className="p-3 bg-red-50 border border-red-100 rounded-lg flex items-center justify-between">
+                  <div className="text-left">
+                    <p className="text-xs text-red-600 uppercase font-bold tracking-wider">Municipality Control Room</p>
+                    <p className="text-sm text-foreground mt-0.5">{t('helplineNumber')}</p>
+                  </div>
+                  <Button variant="outline" size="sm" className="border-red-200 text-red-600 font-bold bg-white" onClick={() => window.open(`tel:${t('helplineNumber')}`)}>
+                    Call
+                  </Button>
+                </div>
+                <div className="p-3 bg-blue-50 border border-blue-100 rounded-lg flex items-center justify-between">
+                  <div className="text-left">
+                    <p className="text-xs text-blue-600 uppercase font-bold tracking-wider">Emergency WhatsApp</p>
+                    <p className="text-sm text-foreground mt-0.5">+91 94451 94451</p>
+                  </div>
+                  <Button variant="outline" size="sm" className="border-blue-200 text-blue-600 font-bold bg-white" onClick={() => window.open(`https://wa.me/919445194451`)}>
+                    Chat
+                  </Button>
+                </div>
+              </div>
+              <div className="flex justify-end pt-2">
+                <Button onClick={() => setShowHelplineModal(false)} className="font-bold">
+                  {t('close')}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }

@@ -8,7 +8,7 @@ export type Language = 'en' | 'ta';
 export const translations = {
   en: {
     // Common
-    appTitle: 'FIX MY STREET',
+    appTitle: 'Puthuyugavijayam',
     appSubtitle: 'Civic Complaint Management System',
     logout: 'Logout',
     submit: 'Submit',
@@ -22,6 +22,13 @@ export const translations = {
     success: 'Success',
     language: 'Language',
     welcome: 'Welcome',
+    privacyPolicy: 'Privacy Policy',
+    aboutApp: 'About App',
+    officialHelpline: 'Official Helpline',
+    helplineNumber: '04563 - 222011',
+    close: 'Close',
+    aboutDescription: 'Puthuyugavijayam (New Era Victory) is a public complaint management system to report civic issues directly to Rajapalayam Municipality.',
+    privacyDescription: 'This app collects your name, mobile number, and location strictly for civic grievance registration and verification purposes. No personal data is shared with third parties.',
 
     // Authentication
     login: 'Login',
@@ -178,8 +185,7 @@ export const translations = {
   },
 
   ta: {
-    // Common
-    appTitle: 'TN மக்கள் குறைதீர்',
+    appTitle: 'புதுயுகவிஜயம்',
     appSubtitle: 'பொது குறைதீர்வு போர்ட்டல்',
     logout: 'வெளியேறு',
     submit: 'சமர்ப்பி',
@@ -193,6 +199,13 @@ export const translations = {
     success: 'வெற்றி',
     language: 'மொழி',
     welcome: 'வரவேற்கிறோம்',
+    privacyPolicy: 'தனியுரிமைக் கொள்கை',
+    aboutApp: 'செயலி பற்றி',
+    officialHelpline: 'அதிகாரப்பூர்வ உதவி எண்',
+    helplineNumber: '04563 - 222011',
+    close: 'மூடு',
+    aboutDescription: 'புதுயுகவிஜயம் என்பது ராஜபாளையம் நகராட்சியில் உள்ள பொது மக்கள் குறைகளைத் தெரிவிக்கும் மற்றும் தீர்க்கும் ஒரு கூட்டு தளமாகும்.',
+    privacyDescription: 'இந்த செயலி உங்களது பெயர், அலைபேசி எண் மற்றும் இருப்பிடத்தை நகராட்சி குறைதீர்க்கும் பயன்பாட்டிற்கு மட்டுமே சேகரிக்கிறது. உங்கள் தகவல்கள் எந்தவொரு மூன்றாம் தரப்பினருடனும் பகிர்ந்து கொள்ளப்பட மாட்டாது.',
 
     // Authentication
     login: 'உள்நுழைக',

@@ -15,34 +15,6 @@ if (!process.env.VERCEL) {
 
 import mongoose from 'mongoose';
 
-let MONGODB_URI = process.env.MONGODB_URI;
-
-if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
-}
-
-// Automatically URL-encode password if it contains special characters (like '@') to prevent connection failures
-if (MONGODB_URI && MONGODB_URI.includes('@')) {
-  const schemePrefix = MONGODB_URI.startsWith('mongodb+srv://') ? 'mongodb+srv://' : 'mongodb://';
-  const credentialsAndHost = MONGODB_URI.slice(schemePrefix.length);
-  const lastAtIndex = credentialsAndHost.lastIndexOf('@');
-  
-  if (lastAtIndex !== -1) {
-    const credentials = credentialsAndHost.slice(0, lastAtIndex);
-    const hostAndQuery = credentialsAndHost.slice(lastAtIndex + 1);
-    
-    const colonIndex = credentials.indexOf(':');
-    if (colonIndex !== -1) {
-      const username = credentials.slice(0, colonIndex);
-      const password = credentials.slice(colonIndex + 1);
-      
-      // Safe URL-encode to handle special symbols in credentials
-      const encodedPassword = encodeURIComponent(decodeURIComponent(password)); 
-      MONGODB_URI = `${schemePrefix}${username}:${encodedPassword}@${hostAndQuery}`;
-    }
-  }
-}
-
 /**
  * Global is used here to maintain a cached connection across hot reloads
  * in development. This prevents connections from growing exponentially
@@ -60,12 +32,40 @@ export async function connectToDatabase() {
   }
 
   if (!cached.promise) {
+    let MONGODB_URI = process.env.MONGODB_URI;
+
+    if (!MONGODB_URI) {
+      throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
+    }
+
+    // Automatically URL-encode password if it contains special characters (like '@') to prevent connection failures
+    if (MONGODB_URI.includes('@')) {
+      const schemePrefix = MONGODB_URI.startsWith('mongodb+srv://') ? 'mongodb+srv://' : 'mongodb://';
+      const credentialsAndHost = MONGODB_URI.slice(schemePrefix.length);
+      const lastAtIndex = credentialsAndHost.lastIndexOf('@');
+      
+      if (lastAtIndex !== -1) {
+        const credentials = credentialsAndHost.slice(0, lastAtIndex);
+        const hostAndQuery = credentialsAndHost.slice(lastAtIndex + 1);
+        
+        const colonIndex = credentials.indexOf(':');
+        if (colonIndex !== -1) {
+          const username = credentials.slice(0, colonIndex);
+          const password = credentials.slice(colonIndex + 1);
+          
+          // Safe URL-encode to handle special symbols in credentials
+          const encodedPassword = encodeURIComponent(decodeURIComponent(password)); 
+          MONGODB_URI = `${schemePrefix}${username}:${encodedPassword}@${hostAndQuery}`;
+        }
+      }
+    }
+
     const opts = {
       bufferCommands: false,
       family: 4, // Force IPv4 to prevent connection hangs on VPNs / dual-stack networks
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongooseInstance) => {
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongooseInstance) => {
       return mongooseInstance;
     });
   }

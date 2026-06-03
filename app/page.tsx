@@ -22,8 +22,8 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-accent/10 flex flex-col items-center justify-center p-4">
       <div className="text-center mb-12">
-        <h1 className="text-5xl md:text-6xl font-bold text-primary mb-4">
-          FIX MY STREET
+        <h1 className="text-4xl md:text-5xl font-extrabold text-primary mb-4 tracking-tight">
+          PUTHUYUGAVIJAYAM
         </h1>
         <p className="text-xl text-muted-foreground mb-2">
           Civic Complaint Management System
