@@ -73,11 +73,11 @@ export function initializeDB() {
 }
 
 // Citizen Management (Live API Calls)
-export async function registerCitizen(name: string, mobileNumber: string): Promise<Citizen> {
+export async function registerCitizen(name: string, mobileNumber: string, password: string): Promise<Citizen> {
   const res = await fetch(getApiUrl('/api/auth/citizen/register'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, mobileNumber }),
+    body: JSON.stringify({ name, mobileNumber, password }),
   });
   
   if (!res.ok) {
@@ -94,12 +94,12 @@ export async function getCitizens(): Promise<Citizen[]> {
   return res.json();
 }
 
-export async function getCitizenByMobile(mobileNumber: string): Promise<Citizen | null> {
+export async function getCitizenByMobile(mobileNumber: string, password?: string): Promise<Citizen | null> {
   try {
     const res = await fetch(getApiUrl('/api/auth/citizen/login'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mobileNumber }),
+      body: JSON.stringify({ mobileNumber, password }),
     });
     
     if (!res.ok) return null;

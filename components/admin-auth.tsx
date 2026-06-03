@@ -109,6 +109,15 @@ export function AdminAuth() {
           </div>
         </CardContent>
       </Card>
+
+      <div className="mt-4 text-center">
+        <button
+          onClick={() => router.push('/')}
+          className="text-sm font-semibold text-primary hover:underline"
+        >
+          ← {language === 'ta' ? 'குடிமக்கள் உள்நுழைவுக்கு' : 'Back to Citizen Login'}
+        </button>
+      </div>
     </div>
   );
 }

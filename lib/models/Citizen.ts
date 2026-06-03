@@ -12,6 +12,10 @@ const CitizenSchema = new Schema(
       unique: true,
       index: true, // Highly optimized index for extremely fast login checks
     },
+    password: {
+      type: String,
+      required: true,
+    },
     registeredAt: {
       type: String,
       required: true,

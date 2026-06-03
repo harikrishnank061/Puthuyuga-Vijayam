@@ -182,6 +182,42 @@ export function ReportIssueModal({
     }
   };
 
+  const takePhoto = async () => {
+    const currentCount = photos.length;
+    if (currentCount >= 5) {
+      setError(
+        language === 'ta'
+          ? 'அதிகபட்சமாக 5 புகைப்படங்களை மட்டுமே பதிவேற்ற முடியும்!'
+          : 'You can only upload a maximum of 5 photos!'
+      );
+      return;
+    }
+
+    try {
+      const { Camera, CameraResultType } = await import('@capacitor/camera');
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.Base64,
+      });
+
+      if (image && image.base64String) {
+        const compressedBase64 = `data:image/jpeg;base64,${image.base64String}`;
+        setPhotos((prev) => [...prev, compressedBase64]);
+      }
+    } catch (err: any) {
+      // Don't throw error if user cancelled the camera prompt
+      if (err.message !== 'User cancelled photos app') {
+        console.error('Camera Error:', err);
+        setError(
+          language === 'ta'
+            ? `கேமரா மூலம் புகைப்படம் எடுப்பதில் தோல்வி: ${err.message}`
+            : `Failed to capture photo from camera: ${err.message}`
+        );
+      }
+    }
+  };
+
   const removePhoto = (index: number) => {
     setPhotos((prev) => prev.filter((_, i) => i !== index));
   };
@@ -352,15 +388,25 @@ export function ReportIssueModal({
                     onChange={handlePhotoUpload}
                     className="hidden"
                   />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="w-full"
-                  >
-                    📷 {t('choosePhotosBtn')}
-                  </Button>
-                  <p className="text-xs text-muted-foreground mt-2">
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={takePhoto}
+                      className="flex-1 font-bold h-10 bg-primary/5 border-primary/20 hover:bg-primary/10 text-primary flex items-center justify-center gap-2"
+                    >
+                      📷 {language === 'ta' ? 'கேமரா மூலம் படம் எடு' : 'Take Photo (Camera)'}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="flex-1 font-semibold h-10 flex items-center justify-center gap-2"
+                    >
+                      📁 {language === 'ta' ? 'கேலரியிலிருந்து தேர்ந்தெடு' : 'Choose from Gallery'}
+                    </Button>
+                  </div>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground mt-2">
                     {t('multiplePhotosAllowed')}
                   </p>
                 </div>

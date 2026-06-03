@@ -294,3 +294,97 @@
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+/* ======== Auth Page Styles ======== */
+.auth-page-bg {
+  background: linear-gradient(180deg, #FDF8F0 0%, #FAF0E2 35%, #F5EAD6 50%, #FAFAFA 60%, #FFFFFF 100%);
+  min-height: 100vh;
+}
+
+.auth-hero-section {
+  background: linear-gradient(180deg, #FDF5E6 0%, #FAE9C8 60%, #F5E0B0 100%);
+  position: relative;
+}
+
+.auth-hero-section::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 30px;
+  background: linear-gradient(180deg, transparent, #FAFAFA);
+}
+
+.auth-emblem-circle {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #F2D409 0%, #E8C84A 50%, #D4A017 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid #C31F26;
+  box-shadow: 0 4px 20px rgba(195, 31, 38, 0.2), 0 2px 8px rgba(0,0,0,0.1);
+  animation: emblemPulse 3s ease-in-out infinite;
+}
+
+@keyframes emblemPulse {
+  0%, 100% { box-shadow: 0 4px 20px rgba(195, 31, 38, 0.2), 0 2px 8px rgba(0,0,0,0.1); }
+  50% { box-shadow: 0 4px 30px rgba(195, 31, 38, 0.35), 0 2px 12px rgba(0,0,0,0.15); }
+}
+
+.auth-role-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 6px;
+  border-radius: 12px;
+  border: 1.5px solid #e5e7eb;
+  background: #FAFAFA;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-align: center;
+}
+
+.auth-role-card:hover {
+  border-color: #C31F26;
+  background: #FFF5F5;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(195, 31, 38, 0.12);
+}
+
+.auth-role-card:active {
+  transform: translateY(0);
+}
+
+.auth-role-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.auth-role-card:hover .auth-role-icon {
+  transform: scale(1.1);
+}
+
+.auth-skyline-footer {
+  margin-top: auto;
+  line-height: 0;
+  pointer-events: none;
+}
+
+/* Animate fade-in for modals/errors */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}

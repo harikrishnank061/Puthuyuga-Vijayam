@@ -1,14 +1,19 @@
 import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import Citizen from '@/lib/models/Citizen';
+import bcrypt from 'bcryptjs';
 
 export async function POST(request: Request) {
   try {
     await connectToDatabase();
-    const { name, mobileNumber } = await request.json();
+    const { name, mobileNumber, password } = await request.json();
 
-    if (!name || !mobileNumber) {
-      return NextResponse.json({ error: 'Name and mobile number are required' }, { status: 400 });
+    if (!name || !mobileNumber || !password) {
+      return NextResponse.json({ error: 'Name, mobile number, and password are required' }, { status: 400 });
+    }
+
+    if (password.length < 4) {
+      return NextResponse.json({ error: 'Password must be at least 4 characters' }, { status: 400 });
     }
 
     // Check if mobile number already exists
@@ -17,9 +22,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Mobile number already registered' }, { status: 400 });
     }
 
+    // Hash the password before saving
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const citizen = new Citizen({
       name,
       mobileNumber,
+      password: hashedPassword,
     });
 
     await citizen.save();

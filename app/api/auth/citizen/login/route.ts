@@ -1,19 +1,30 @@
 import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import Citizen from '@/lib/models/Citizen';
+import bcrypt from 'bcryptjs';
 
 export async function POST(request: Request) {
   try {
     await connectToDatabase();
-    const { mobileNumber } = await request.json();
+    const { mobileNumber, password } = await request.json();
 
     if (!mobileNumber) {
       return NextResponse.json({ error: 'Mobile number is required' }, { status: 400 });
     }
 
+    if (!password) {
+      return NextResponse.json({ error: 'Password is required' }, { status: 400 });
+    }
+
     const citizen = await Citizen.findOne({ mobileNumber });
     if (!citizen) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 404 });
+    }
+
+    // Verify password
+    const isPasswordValid = await bcrypt.compare(password, citizen.password);
+    if (!isPasswordValid) {
+      return NextResponse.json({ error: 'Invalid password' }, { status: 401 });
     }
 
     return NextResponse.json({
