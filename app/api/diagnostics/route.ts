@@ -13,13 +13,26 @@ cloudinary.config({
   secure: true,
 });
 
+import dns from 'dns';
+
 export async function GET() {
+  let activeDnsServers: string[] = [];
+  let dnsSetError: string | null = null;
+
+  try {
+    activeDnsServers = dns.getServers();
+  } catch (e: any) {
+    dnsSetError = 'getServers error: ' + e.message;
+  }
+
   const diagnostics: {
     status: 'ok' | 'error';
+    dns: { activeServers: string[]; error: string | null };
     mongodb: { status: 'connected' | 'failed'; host?: string; database?: string; error?: string };
     cloudinary: { status: 'authenticated' | 'failed'; cloudName?: string; error?: string };
   } = {
     status: 'ok',
+    dns: { activeServers: activeDnsServers, error: dnsSetError },
     mongodb: { status: 'failed' },
     cloudinary: { status: 'failed' },
   };

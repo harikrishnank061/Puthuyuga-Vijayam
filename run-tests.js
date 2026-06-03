@@ -61,7 +61,7 @@ async function runTests() {
     let res = await fetch(`${BASE_URL}/api/auth/citizen/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: '', mobileNumber: testCitizenMobile })
+      body: JSON.stringify({ name: '', mobileNumber: testCitizenMobile, password: 'password123' })
     });
     let data = await res.json();
     assertError(data.error, 'required', 'Test 3: Rejects registration if name is empty');
@@ -70,7 +70,7 @@ async function runTests() {
     res = await fetch(`${BASE_URL}/api/auth/citizen/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: testCitizenName, mobileNumber: '' })
+      body: JSON.stringify({ name: testCitizenName, mobileNumber: '', password: 'password123' })
     });
     data = await res.json();
     assertError(data.error, 'required', 'Test 4: Rejects registration if mobile is empty');
@@ -79,7 +79,7 @@ async function runTests() {
     res = await fetch(`${BASE_URL}/api/auth/citizen/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: '', mobileNumber: '' })
+      body: JSON.stringify({ name: '', mobileNumber: '', password: 'password123' })
     });
     data = await res.json();
     assertError(data.error, 'required', 'Test 5: Rejects registration if both fields are empty');
@@ -88,7 +88,7 @@ async function runTests() {
     res = await fetch(`${BASE_URL}/api/auth/citizen/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: testCitizenName, mobileNumber: testCitizenMobile })
+      body: JSON.stringify({ name: testCitizenName, mobileNumber: testCitizenMobile, password: 'password123' })
     });
     let regCitizen = await res.json();
     assert(res.ok && regCitizen.id, 'Test 6: Accepts valid unique credentials');
@@ -98,7 +98,7 @@ async function runTests() {
     res = await fetch(`${BASE_URL}/api/auth/citizen/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: 'Another User', mobileNumber: testCitizenMobile })
+      body: JSON.stringify({ name: 'Another User', mobileNumber: testCitizenMobile, password: 'password123' })
     });
     data = await res.json();
     assertError(data.error, 'already', 'Test 7: Rejects duplicate mobile number registration');
@@ -123,7 +123,7 @@ async function runTests() {
     res = await fetch(`${BASE_URL}/api/auth/citizen/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mobileNumber: '' })
+      body: JSON.stringify({ mobileNumber: '', password: 'password123' })
     });
     data = await res.json();
     assertError(data.error, 'required', 'Test 11: Rejects login with empty mobile number');
@@ -132,7 +132,7 @@ async function runTests() {
     res = await fetch(`${BASE_URL}/api/auth/citizen/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mobileNumber: '9999999999' })
+      body: JSON.stringify({ mobileNumber: '9999999999', password: 'password123' })
     });
     data = await res.json();
     assertError(data.error, 'credentials', 'Test 12: Rejects login with unregistered mobile number');
@@ -141,7 +141,7 @@ async function runTests() {
     res = await fetch(`${BASE_URL}/api/auth/citizen/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mobileNumber: testCitizenMobile })
+      body: JSON.stringify({ mobileNumber: testCitizenMobile, password: 'password123' })
     });
     let loginCitizenObj = await res.json();
     assert(res.ok && loginCitizenObj.id === testCitizenId, 'Test 13: Accepts login with valid registered mobile number');
@@ -156,7 +156,7 @@ async function runTests() {
     res = await fetch(`${BASE_URL}/api/auth/citizen/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mobileNumber: 'abcdefg' })
+      body: JSON.stringify({ mobileNumber: 'abcdefg', password: 'password123' })
     });
     data = await res.json();
     assert(!res.ok, 'Test 16: Rejects malformed non-numeric mobile numbers');
