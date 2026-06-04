@@ -16,6 +16,7 @@ if (Test-Path "app/api") {
 # 2. Build the Next.js application in static export mode
 Write-Host "Running Next.js static build..." -ForegroundColor Yellow
 $env:STATIC_EXPORT="true"
+$env:NEXT_PUBLIC_API_URL="https://puthuyugavijayam.in"
 npm run build
 
 $buildStatus = $LASTEXITCODE

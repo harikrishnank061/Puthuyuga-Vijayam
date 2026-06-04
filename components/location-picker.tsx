@@ -6,6 +6,7 @@ import L from 'leaflet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useLanguage } from '@/lib/i18n';
+import { AlertTriangle, X, MapPin, Locate, Navigation } from 'lucide-react';
 
 // Fix leaflet default icon issue
 const DefaultIcon = L.icon({
@@ -70,6 +71,7 @@ export function LocationPicker({
   const [selectedLng, setSelectedLng] = useState(initialLng);
   const [searchAddress, setSearchAddress] = useState('');
   const [error, setError] = useState('');
+  const [confirmed, setConfirmed] = useState(false);
   const mapRef = useRef(null);
 
   const isWithinRajapalayam = (lat: number, lng: number) => {
@@ -99,6 +101,7 @@ export function LocationPicker({
 
   const handleLocationSelect = (lat: number, lng: number) => {
     setError('');
+    setConfirmed(false);
     if (!isWithinRajapalayam(lat, lng)) {
       setError(language === 'ta' 
         ? 'இந்தச் செயலி ராஜபாளையம் தொகுதிக்குள் மட்டுமே செயல்படும்!' 
@@ -112,10 +115,13 @@ export function LocationPicker({
 
   const handleConfirm = () => {
     onLocationSelect(selectedLat, selectedLng, searchAddress);
+    setConfirmed(true);
+    setTimeout(() => setConfirmed(false), 2000);
   };
 
   const handleGetCurrentLocation = () => {
     setError('');
+    setConfirmed(false);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -144,24 +150,31 @@ export function LocationPicker({
     <div className="space-y-4">
       {error && (
         <div className="p-3.5 bg-destructive/10 border border-destructive/20 text-destructive rounded-lg text-xs font-semibold animate-fade-in flex justify-between items-center">
-          <span>⚠️ {error}</span>
+          <span className="flex items-center gap-1.5">
+            <AlertTriangle className="h-4 w-4" />
+            {error}
+          </span>
           <button 
             type="button" 
             onClick={() => setError('')} 
             className="text-destructive hover:opacity-85 text-sm ml-2 font-bold focus:outline-none"
           >
-            ✕
+            <X className="h-4 w-4" />
           </button>
         </div>
       )}
-      <div className="space-y-2">
-        <label className="text-sm font-semibold">{t('selectLocation')}</label>
-        <p className="text-xs text-muted-foreground">
+      
+      <div className="space-y-1 text-left">
+        <label className="text-sm font-bold text-[#6B1D1D] flex items-center gap-1.5">
+          <MapPin className="h-4.5 w-4.5 text-[#C31F26] fill-[#C31F26]/10" />
+          {t('selectLocation')}
+        </label>
+        <p className="text-xs text-muted-foreground pl-6">
           {t('clickMapOrUseGPS')}
         </p>
       </div>
 
-      <div className="w-full h-[300px] rounded-lg overflow-hidden border border-border">
+      <div className="w-full h-[300px] rounded-lg overflow-hidden border border-border relative">
         <MapContainer
           center={[selectedLat, selectedLng]}
           zoom={RAJAPALAYAM_ZOOM}
@@ -176,37 +189,55 @@ export function LocationPicker({
           <ClickableMap onSelect={handleLocationSelect} />
           <MapUpdater lat={selectedLat} lng={selectedLng} />
         </MapContainer>
+        
+        {/* Absolute Locate Me button overlay on Map */}
+        <button
+          type="button"
+          onClick={handleGetCurrentLocation}
+          className="absolute top-3 right-3 z-[1000] bg-white border border-gray-200 rounded-lg shadow-md px-3 py-1.5 text-xs font-bold flex items-center gap-1.5 hover:bg-gray-50 active:scale-95 transition-all text-gray-700"
+        >
+          <Locate className="h-4 w-4 text-[#C31F26]" />
+          {language === 'ta' ? 'இருப்பிடத்தைக் காண்' : 'Locate Me'}
+        </button>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 text-sm">
+      <div className="grid grid-cols-2 gap-4 text-sm text-left">
         <div>
-          <label className="text-xs font-semibold mb-1 block">{t('latitude')}</label>
+          <label className="text-xs font-bold text-[#6B1D1D] mb-1.5 flex items-center gap-1.5">
+            <MapPin className="h-3.5 w-3.5 text-[#C31F26]" />
+            {t('latitude')}
+          </label>
           <Input
             type="number"
             step="0.0001"
             value={selectedLat.toFixed(4)}
             readOnly
-            className="bg-muted"
+            className="bg-muted text-gray-700 font-medium"
           />
         </div>
         <div>
-          <label className="text-xs font-semibold mb-1 block">{t('longitude')}</label>
+          <label className="text-xs font-bold text-[#6B1D1D] mb-1.5 flex items-center gap-1.5">
+            <MapPin className="h-3.5 w-3.5 text-[#C31F26]" />
+            {t('longitude')}
+          </label>
           <Input
             type="number"
             step="0.0001"
             value={selectedLng.toFixed(4)}
             readOnly
-            className="bg-muted"
+            className="bg-muted text-gray-700 font-medium"
           />
         </div>
       </div>
 
-      <div className="space-y-2">
-        <label className="text-sm font-semibold">
+      <div className="space-y-1.5 text-left">
+        <label className="text-sm font-bold text-[#6B1D1D] flex items-center gap-1.5">
+          <MapPin className="h-4.5 w-4.5 text-[#C31F26]" />
           {language === 'ta' ? 'இருப்பிட விளக்கம் (விருப்பப்பட்டால்)' : 'Location Description (Optional)'}
         </label>
         <Input
           placeholder={language === 'ta' ? 'உதாரணம்: அண்ணா சாலை சந்திப்பு அருகில், கோவில் எதிரில்' : 'e.g., Near Anna Salai Junction, Opposite Temple'}
+          value={searchAddress}
           onChange={(e) => {
             setSearchAddress(e.target.value);
             onLocationSelect(selectedLat, selectedLng, e.target.value);
@@ -214,19 +245,29 @@ export function LocationPicker({
         />
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="grid grid-cols-2 gap-3 pt-2">
         <Button
           variant="outline"
+          type="button"
           onClick={handleGetCurrentLocation}
-          className="w-full font-semibold"
+          className="w-full font-bold h-11 border-[#C31F26]/30 text-[#C31F26] hover:bg-[#C31F26]/5 rounded-xl flex items-center justify-center gap-1.5"
         >
-          📍 {t('currentLocation')}
+          <Navigation className="h-4 w-4 rotate-45" /> 
+          {t('currentLocation')}
         </Button>
         <Button
+          type="button"
           onClick={handleConfirm}
-          className="w-full bg-primary text-primary-foreground hover:bg-primary/95 font-semibold"
+          className={`w-full h-11 text-white font-bold rounded-xl flex items-center justify-center transition-all duration-200 ${
+            confirmed 
+              ? 'bg-emerald-600 hover:bg-emerald-700 shadow-md shadow-emerald-600/10' 
+              : 'bg-[#C31F26] hover:bg-[#a0191f]'
+          }`}
         >
-          {language === 'ta' ? 'இருப்பிடத்தை உறுதிப்படுத்து' : 'Confirm Location'}
+          {confirmed 
+            ? (language === 'ta' ? 'இருப்பிடம் உறுதி செய்யப்பட்டது! ✓' : 'Location Confirmed! ✓')
+            : (language === 'ta' ? 'இருப்பிடத்தை உறுதிப்படுத்து' : 'Confirm Location')
+          }
         </Button>
       </div>
     </div>

@@ -1,15 +1,36 @@
 import dns from 'dns';
+import { execSync } from 'child_process';
 
-// Force Google & Cloudflare DNS servers to resolve Node.js DNS Srv lookup failures on local BSNL broadband connections
-// Skip this on Vercel deployment to avoid network resolution issues in production serverless containers
+// Dynamically extract system DNS servers on Windows to bypass Node c-ares defaulting to 127.0.0.1
 if (!process.env.VERCEL) {
   try {
-    dns.setServers(['8.8.8.8', '1.1.1.1']);
-    if (typeof dns.setDefaultResultOrder === 'function') {
-      dns.setDefaultResultOrder('ipv4first');
+    let systemDns: string[] = [];
+    if (process.platform === 'win32') {
+      const output = execSync('powershell -Command "Get-DnsClientServerAddress -AddressFamily IPv4 | Where-Object { $_.ServerAddresses -ne $null } | ForEach-Object { $_.ServerAddresses }"').toString().trim();
+      if (output) {
+        systemDns = output
+          .split(/[\r\n\s,]+/)
+          .map(s => s.trim())
+          .filter(s => s && s !== '127.0.0.1' && s !== '::1');
+      }
     }
+    
+    // Add public fallback DNS servers (like Google & Cloudflare) to the end of the list
+    systemDns.push('8.8.8.8', '1.1.1.1', '8.8.4.4');
+    
+    // Deduplicate servers list
+    const finalServers = Array.from(new Set(systemDns));
+    dns.setServers(finalServers);
   } catch (error) {
-    console.warn('Could not set custom DNS servers, falling back:', error);
+    console.warn('Could not set system DNS servers, falling back to Node default:', error);
+  }
+}
+
+if (typeof dns.setDefaultResultOrder === 'function') {
+  try {
+    dns.setDefaultResultOrder('ipv4first');
+  } catch (error) {
+    console.warn('Could not set default result order:', error);
   }
 }
 

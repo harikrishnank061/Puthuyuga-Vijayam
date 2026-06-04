@@ -6,7 +6,8 @@ import { useAuth } from '@/lib/auth-context';
 import { useLanguage } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
+import { Eye, EyeOff, Lock, User, Building2, ShieldCheck } from 'lucide-react';
 
 export function AdminAuth() {
   const router = useRouter();
@@ -14,6 +15,7 @@ export function AdminAuth() {
   const { t, toggleLanguage, language } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({
     username: '',
     password: '',
@@ -45,78 +47,197 @@ export function AdminAuth() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 to-accent/5 flex flex-col items-center justify-center p-4 gap-4">
-      <div className="w-full max-w-md flex justify-end">
+    <div className="min-h-screen md:h-screen w-full md:overflow-hidden flex flex-col justify-center md:justify-between py-6 md:py-0 md:pt-4 md:pb-0 px-4 sm:px-6 lg:px-8 relative auth-tcm-bg">
+      {/* Language Toggle - Floating */}
+      <div className="absolute top-4 right-4 z-50">
         <Button
           variant="outline"
           size="sm"
           onClick={toggleLanguage}
-          className="gap-2 border-primary/20 bg-card text-card-foreground shadow-sm font-semibold"
+          className="bg-white/90 backdrop-blur-sm shadow-md border-primary/20 font-bold text-sm px-3 py-1.5 rounded-full hover:bg-white"
         >
           {language === 'en' ? 'தமிழ்' : 'English'}
         </Button>
       </div>
 
-      <Card className="w-full max-w-md shadow-lg border-primary/10">
-        <CardHeader className="flag-card-header rounded-t-lg p-4 sm:p-6">
-          <CardTitle className="text-2xl sm:text-3xl font-extrabold text-center flag-header-text">{t('appTitle')}</CardTitle>
-          <CardDescription className="text-center mt-1 flag-header-subtext font-semibold text-xs sm:text-sm">
-            {t('adminDashboard')}
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent className="pt-6">
-          {error && (
-            <div className="mb-4 p-3 bg-destructive/10 text-destructive rounded-md text-sm">
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">{t('username')}</label>
-              <Input
-                type="text"
-                placeholder={t('enterUsername')}
-                value={form.username}
-                onChange={(e) => setForm({ ...form, username: e.target.value })}
-                disabled={loading}
-                className="mt-1"
+      {/* Main Container */}
+      <div className="container mx-auto max-w-6xl flex-1 flex flex-col justify-center md:justify-between gap-6 pt-2 pb-6 md:pb-0">
+        
+        {/* Top Header: Logo + Title + Dots + Admin Badge */}
+        <div className="flex flex-col items-center text-center mt-1 mb-2 md:flex-shrink-0">
+          <div className="flex items-center justify-center gap-4 sm:gap-6 mb-1 w-full max-w-[340px] xs:max-w-[400px] sm:max-w-md">
+            {/* Left Portrait: Mobile only */}
+            <div className="md:hidden flex-shrink-0">
+              <img 
+                src="/HIV838cbIAAghD0.jpg.jpeg" 
+                alt="Leader Left" 
+                className="w-20 h-20 xs:w-24 xs:h-24 sm:w-28 sm:h-28 rounded-full border-2 border-[#C31F26] object-cover shadow-lg"
               />
             </div>
-
-            <div>
-              <label className="text-sm font-medium">{t('password')}</label>
-              <Input
-                type="password"
-                placeholder={t('enterPassword')}
-                value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
-                disabled={loading}
-                className="mt-1"
+            
+            {/* App Logo */}
+            <img 
+              src="/Puthuyuga Vijayam Logo.png" 
+              alt="App Logo" 
+              className="w-24 h-24 xs:w-28 xs:h-28 sm:w-32 sm:h-32 md:w-32 md:h-32 object-contain filter drop-shadow-md transition-transform hover:scale-105"
+            />
+            
+            {/* Right Portrait: Mobile only */}
+            <div className="md:hidden flex-shrink-0">
+              <img 
+                src="/WhatsApp Image 2026-06-03 at 16.32.56.jpeg" 
+                alt="Leader Right" 
+                className="w-20 h-20 xs:w-24 xs:h-24 sm:w-28 sm:h-28 rounded-full border-2 border-[#C31F26] object-cover shadow-lg"
               />
             </div>
-
-            <Button type="submit" disabled={loading} className="w-full">
-              {loading ? t('loading') : t('login')}
-            </Button>
-          </form>
-
-          <div className="mt-4 text-xs text-muted-foreground text-center">
-            <p>Demo Credentials:</p>
-            <p>Username: ADMIN</p>
-            <p>Password: ADMIN123</p>
           </div>
-        </CardContent>
-      </Card>
 
-      <div className="mt-4 text-center">
-        <button
-          onClick={() => router.push('/')}
-          className="text-sm font-semibold text-primary hover:underline"
-        >
-          ← {language === 'ta' ? 'குடிமக்கள் உள்நுழைவுக்கு' : 'Back to Citizen Login'}
-        </button>
+          <h1 
+            className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#6B1D1D] tracking-tight leading-tight mt-2.5 animate-fade-in" 
+            style={{ fontFamily: "'Noto Sans Tamil', sans-serif" }}
+          >
+            புதுயுக விஜயம்
+          </h1>
+          
+          {/* Admin Badge */}
+          <div className="inline-flex items-center gap-1.5 bg-[#C31F26] text-white px-3 py-1 rounded-full text-xs sm:text-sm font-bold shadow-md mt-2">
+            <ShieldCheck className="h-3.5 w-3.5" />
+            {language === 'ta' ? 'நிர்வாக உள்நுழைவு' : 'Admin Portal'}
+          </div>
+
+          <div className="flex items-center justify-center gap-1.5 mt-3">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#C31F26]"></span>
+            <span className="w-2.5 h-2.5 rounded-full bg-[#C31F26]/30"></span>
+          </div>
+        </div>
+
+        {/* 2-Column Content Section */}
+        <div className="w-full max-w-[1100px] mx-auto md:mr-auto md:ml-6 lg:ml-12 flex flex-col md:flex-row items-center md:items-end justify-center md:justify-start gap-6 lg:gap-12 pt-2 pb-0 md:pb-0 md:mt-auto md:flex-shrink-0">
+          
+          {/* Column 1: Left Branding Banner Image */}
+          <div className="hidden md:flex md:w-[48%] flex-shrink-0 justify-center md:justify-start md:self-end">
+            <img 
+              src="/ChatGPT Image Jun 3, 2026, 05_13_05 PM-Photoroom.png" 
+              alt="Branding Banner" 
+              className="w-full max-w-[320px] xs:max-w-[380px] sm:max-w-[420px] md:max-w-[480px] lg:max-w-[500px] md:max-h-[calc(100vh-210px)] object-contain object-bottom drop-shadow-2xl animate-fade-in"
+            />
+          </div>
+
+          {/* Column 2: Auth Form Card */}
+          <div className="w-full max-w-md flex-shrink-0 flex justify-center md:justify-start md:self-center md:mb-8">
+            <Card className="w-full shadow-2xl border-0 rounded-3xl overflow-hidden bg-white/95 backdrop-blur-sm md:h-[510px]">
+              <CardContent className="p-5 md:p-6 h-full flex flex-col justify-between">
+                <div className="flex-1 flex flex-col justify-center overflow-y-auto pr-1">
+                  {/* Form Header */}
+                  <div className="mb-3">
+                    <h3 className="text-xl sm:text-2xl font-bold text-[#6B1D1D]">
+                      {language === 'ta' ? 'நிர்வாக உள்நுழைவு' : 'Admin Login'}
+                    </h3>
+                    <p className="text-sm text-gray-500 mt-0.5 font-medium">
+                      {language === 'ta'
+                        ? 'அதிகாரப்பூர்வ அணுகலுக்கு உங்கள் நற்சான்றிதழ்களை உள்ளிடவும்'
+                        : 'Enter your credentials for authorized access'}
+                    </p>
+                  </div>
+
+                  {/* Error */}
+                  {error && (
+                    <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm font-medium animate-fade-in">
+                      {error}
+                    </div>
+                  )}
+
+                  <form onSubmit={handleSubmit} className="space-y-3">
+                    {/* Username */}
+                    <div className="relative">
+                      <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#C31F26]">
+                        <User className="h-4.5 w-4.5" />
+                      </div>
+                      <Input
+                        type="text"
+                        placeholder={t('enterUsername')}
+                        value={form.username}
+                        onChange={(e) => setForm({ ...form, username: e.target.value })}
+                        disabled={loading}
+                        className="pl-11 h-11 rounded-xl border-gray-200 bg-gray-50/70 text-base focus:bg-white focus:border-[#C31F26] transition-all"
+                      />
+                    </div>
+
+                    {/* Password */}
+                    <div className="relative">
+                      <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#C31F26]">
+                        <Lock className="h-4.5 w-4.5" />
+                      </div>
+                      <Input
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder={t('enterPassword')}
+                        value={form.password}
+                        onChange={(e) => setForm({ ...form, password: e.target.value })}
+                        disabled={loading}
+                        className="pl-11 pr-11 h-11 rounded-xl border-gray-200 bg-gray-50/70 text-base focus:bg-white focus:border-[#C31F26] transition-all"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                      >
+                        {showPassword ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
+                      </button>
+                    </div>
+
+                    {/* Login Button */}
+                    <Button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full h-11 rounded-xl text-base font-bold bg-[#7B1E1E] hover:bg-[#5C1515] text-white shadow-lg shadow-[#7B1E1E]/20 transition-all active:scale-[0.98]"
+                    >
+                      {loading ? t('loading') : t('login')}
+                    </Button>
+                  </form>
+
+                  {/* Divider */}
+                  <div className="flex items-center gap-3 my-4">
+                    <div className="flex-1 h-px bg-gray-200"></div>
+                    <span className="text-xs text-gray-400 font-bold uppercase tracking-wider">{t('or')}</span>
+                    <div className="flex-1 h-px bg-gray-200"></div>
+                  </div>
+
+                  {/* Back to Citizen */}
+                  <div className="text-center">
+                    <button
+                      type="button"
+                      onClick={() => router.push('/')}
+                      className="auth-role-card group w-full"
+                    >
+                      <div className="auth-role-icon bg-red-100">
+                        <User className="h-5 w-5 text-[#C31F26]" />
+                      </div>
+                      <span className="text-[10px] sm:text-xs font-bold text-gray-700 leading-tight">
+                        {language === 'ta' ? 'குடிமக்கள் உள்நுழைவு' : 'Citizen Login'}
+                      </span>
+                      <span className="text-[9px] text-gray-400 font-medium leading-tight">
+                        {language === 'ta' ? 'குடிமக்கள் போர்டலுக்கு' : 'Switch to citizen portal'}
+                      </span>
+                    </button>
+                  </div>
+                </div>
+
+              {/* Privacy Link */}
+              <div className="text-center mt-4 pt-4 border-t border-gray-100 flex-shrink-0">
+                <button 
+                  type="button" 
+                  onClick={() => router.push('/privacy')}
+                  className="text-xs text-gray-400 hover:text-gray-600 underline transition-colors"
+                >
+                  {t('privacyPolicy')}
+                </button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        </div>
+
       </div>
     </div>
   );

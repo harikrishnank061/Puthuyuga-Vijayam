@@ -31,7 +31,11 @@ export function AdminMapView({
     let filtered = complaints;
 
     if (statusFilter !== 'all') {
-      filtered = filtered.filter((c) => c.status === statusFilter);
+      if (statusFilter === 'resolved') {
+        filtered = filtered.filter((c) => c.status === 'resolved' || c.status === 'closed');
+      } else {
+        filtered = filtered.filter((c) => c.status === statusFilter);
+      }
     }
 
     if (priorityFilter !== 'all') {
@@ -93,45 +97,6 @@ export function AdminMapView({
 
   return (
     <div className="space-y-6">
-      {/* Statistics Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <Card className="border-border">
-          <CardContent className="p-3 sm:p-6 pt-4 sm:pt-6">
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-primary">{stats.total}</div>
-              <p className="text-xs sm:text-sm text-muted-foreground font-medium mt-1">{t('totalReports')}</p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-red-100">
-          <CardContent className="p-3 sm:p-6 pt-4 sm:pt-6">
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-red-600">{stats.open}</div>
-              <p className="text-xs sm:text-sm text-muted-foreground font-medium mt-1">{t('reportedRed')}</p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-yellow-100">
-          <CardContent className="p-3 sm:p-6 pt-4 sm:pt-6">
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-yellow-600">{stats.inProgress}</div>
-              <p className="text-xs sm:text-sm text-muted-foreground font-medium mt-1">{t('inProgressYellow')}</p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-green-100">
-          <CardContent className="p-3 sm:p-6 pt-4 sm:pt-6">
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-green-600">{stats.resolved}</div>
-              <p className="text-xs sm:text-sm text-muted-foreground font-medium mt-1">{t('resolvedGreen')}</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
       {/* Filters and Map */}
       <Card className="border-border shadow-md">
         <CardHeader>
@@ -267,6 +232,45 @@ export function AdminMapView({
           )}
         </CardContent>
       </Card>
+
+      {/* Statistics Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-6">
+        <Card className="border-border shadow-sm">
+          <CardContent className="p-3 sm:p-6 pt-4 sm:pt-6">
+            <div className="text-center">
+              <div className="text-2xl sm:text-3xl font-bold text-primary">{stats.total}</div>
+              <p className="text-xs sm:text-sm text-muted-foreground font-semibold mt-1">{t('totalReports')}</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-red-100 shadow-sm">
+          <CardContent className="p-3 sm:p-6 pt-4 sm:pt-6">
+            <div className="text-center">
+              <div className="text-2xl sm:text-3xl font-bold text-red-600">{stats.open}</div>
+              <p className="text-xs sm:text-sm text-muted-foreground font-semibold mt-1">{t('reportedRed')}</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-yellow-100 shadow-sm">
+          <CardContent className="p-3 sm:p-6 pt-4 sm:pt-6">
+            <div className="text-center">
+              <div className="text-2xl sm:text-3xl font-bold text-yellow-600">{stats.inProgress}</div>
+              <p className="text-xs sm:text-sm text-muted-foreground font-semibold mt-1">{t('inProgressYellow')}</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-green-100 shadow-sm">
+          <CardContent className="p-3 sm:p-6 pt-4 sm:pt-6">
+            <div className="text-center">
+              <div className="text-2xl sm:text-3xl font-bold text-green-600">{stats.resolved}</div>
+              <p className="text-xs sm:text-sm text-muted-foreground font-semibold mt-1">{t('resolvedGreen')}</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

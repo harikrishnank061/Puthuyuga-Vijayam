@@ -8,6 +8,7 @@ import { LocationPicker } from '@/components/location-picker';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { X, Mic, MicOff, Camera, Image as LucideImage, ClipboardList, FileText, MessageSquareText, LayoutGrid, Flag, Info, Navigation, Send, AlertTriangle } from 'lucide-react';
 
 const CATEGORIES = [
   'roads',
@@ -276,81 +277,136 @@ export function ReportIssueModal({
   };
 
   return (
-    <Card className="w-full max-w-5xl mx-auto shadow-2xl border-primary/20 bg-card text-card-foreground">
-      <CardHeader className="bg-primary text-primary-foreground rounded-t-lg flex flex-row items-center justify-between">
-        <div>
-          <CardTitle className="text-2xl font-bold">{t('reportNewIssue')}</CardTitle>
-          <CardDescription className="text-primary-foreground/90">
-            {language === 'ta'
-              ? 'உங்கள் புகாரை வரைபட இருப்பிடத்துடன் சமர்ப்பிக்கவும்'
-              : 'Submit your complaint with its map location'}
-          </CardDescription>
+    <Card className="w-full max-w-5xl mx-auto shadow-2xl border-primary/10 rounded-2xl overflow-hidden bg-white text-card-foreground">
+      {/* Header styled with branding illustration banner on the right side */}
+      <CardHeader 
+        className="relative flex flex-row items-center justify-between p-4 sm:p-5 border-b border-[#C31F26]/10 text-left bg-cover bg-no-repeat bg-center"
+        style={{
+          backgroundImage: `linear-gradient(to right, rgba(250, 244, 235, 0.96), rgba(250, 244, 235, 0.85)), url('/tcm.png')`
+        }}
+      >
+        <div className="flex items-center gap-3 sm:gap-4 z-10 flex-1 min-w-0">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border border-[#C31F26]/30 flex items-center justify-center shadow-sm flex-shrink-0">
+            <ClipboardList className="h-5.5 w-5.5 sm:h-6 sm:w-6 text-[#C31F26] flex-shrink-0" />
+          </div>
+          <div className="flex-1 min-w-0 pr-2">
+            <CardTitle className="text-lg sm:text-2xl font-extrabold text-[#6B1D1D] tracking-tight relative pb-1 flex flex-col items-start leading-none">
+              {t('reportNewIssue')}
+              <span className="w-12 h-1 bg-[#C31F26] mt-1 sm:mt-1.5 rounded-full"></span>
+            </CardTitle>
+            <CardDescription className="text-[10px] sm:text-sm text-[#8B3A3A]/90 font-semibold mt-1 leading-snug break-words">
+              {language === 'ta'
+                ? 'உங்கள் புகாரை வரைபட இருப்பிடத்துடன் சமர்ப்பிக்கவும்'
+                : 'Submit your complaint with its exact location'}
+            </CardDescription>
+          </div>
         </div>
+
         <Button
           variant="ghost"
-          size="sm"
+          size="icon"
           onClick={onClose}
-          className="text-primary-foreground hover:bg-primary/80"
+          className="h-8 w-8 rounded-full bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 hover:text-gray-900 shadow-sm z-10 flex items-center justify-center flex-shrink-0"
         >
-          ✕
+          <X className="h-4 w-4" />
         </Button>
       </CardHeader>
-      <CardContent className="p-4 sm:p-6 pt-6">
+
+      <CardContent className="p-5 sm:p-6">
+        {/* Permanent Warning Information Banner */}
+        <div className="mb-5 p-3 sm:p-3.5 bg-[#FDF5E6] border border-[#FAE9C8] text-[#8B3A3A] rounded-xl text-sm flex items-center gap-2.5 text-left">
+          <Info className="h-4.5 w-4.5 text-[#C31F26] flex-shrink-0" />
+          <span className="font-semibold text-xs sm:text-sm">
+            {language === 'ta' 
+              ? 'உங்கள் புகாரைச் சமர்ப்பிக்க தேவையான அனைத்து விவரங்களையும் நிரப்பவும்.' 
+              : 'Please fill in all required fields to submit your report.'}
+          </span>
+        </div>
+
         {error && (
-          <div className="mb-6 p-4 bg-destructive/10 border border-destructive/20 text-destructive rounded-lg text-sm">
-            {error}
+          <div className="mb-5 p-3.5 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm font-semibold flex justify-between items-center text-left">
+            <span className="flex items-center gap-1.5">
+              <AlertTriangle className="h-4 w-4 text-red-600" />
+              {error}
+            </span>
+            <button type="button" onClick={() => setError('')} className="text-red-700 hover:opacity-85 font-bold">
+              <X className="h-4 w-4" />
+            </button>
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Left Column: Complaint Details Form */}
-            <div className="lg:col-span-7 space-y-5">
+            <div className="lg:col-span-7 space-y-5 text-left">
               <div>
-                <label className="text-sm font-semibold mb-1.5 block">{t('issueTitleLabel')}</label>
+                <label className="text-sm font-bold text-[#6B1D1D] mb-1.5 flex items-center gap-1.5">
+                  <FileText className="h-4 w-4 text-[#C31F26]" />
+                  {t('issueTitleLabel')}
+                </label>
                 <Input
                   placeholder={t('issueTitlePlaceholder')}
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
-                  className="w-full"
+                  className="w-full rounded-xl border-gray-200"
                 />
               </div>
 
               <div>
                 <div className="flex justify-between items-center mb-1.5">
-                  <label className="text-sm font-semibold block">{t('descriptionLabel')}</label>
+                  <label className="text-sm font-bold text-[#6B1D1D] flex items-center gap-1.5">
+                    <MessageSquareText className="h-4 w-4 text-[#C31F26]" />
+                    {t('descriptionLabel')}
+                  </label>
                   <Button
                     type="button"
                     variant="outline"
                     size="sm"
                     onClick={toggleListening}
-                    className={`flex items-center gap-1.5 px-3 py-1 text-xs rounded-full border transition-all ${
+                    className={`flex items-center gap-1.5 px-3 py-1 h-8 text-xs rounded-full border transition-all ${
                       isListening
                         ? 'bg-destructive/10 border-destructive text-destructive animate-pulse font-semibold'
-                        : 'hover:bg-accent hover:text-accent-foreground border-border text-muted-foreground bg-background'
+                        : 'bg-[#FAF4EB]/40 hover:bg-[#FAF4EB]/70 border-[#C31F26]/20 text-[#C31F26]'
                     }`}
                   >
-                    {isListening 
-                      ? (language === 'ta' ? '🛑 பதிவு செய்வதை நிறுத்து...' : '🛑 Stop Recording...') 
-                      : (language === 'ta' ? '🎙️ பேசி தட்டச்சு செய்க' : '🎙️ Speak to Type')}
+                    {isListening ? (
+                      <>
+                        <MicOff className="h-3.5 w-3.5 mr-0.5" />
+                        {language === 'ta' ? 'பதிவு செய்வதை நிறுத்து...' : 'Stop Recording...'}
+                      </>
+                    ) : (
+                      <>
+                        <Mic className="h-3.5 w-3.5 mr-0.5 text-[#C31F26]" />
+                        {language === 'ta' ? 'பேசி தட்டச்சு செய்க' : 'Speak to Type'}
+                      </>
+                    )}
                   </Button>
                 </div>
-                <textarea
-                  placeholder={t('descriptionPlaceholder')}
-                  value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary min-h-[100px] bg-background text-foreground"
-                  rows={4}
-                />
+                <div className="relative">
+                  <textarea
+                    placeholder={t('descriptionPlaceholder')}
+                    value={form.description}
+                    maxLength={500}
+                    onChange={(e) => setForm({ ...form, description: e.target.value })}
+                    className="w-full px-3 py-2 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary min-h-[120px] bg-background text-foreground pr-1"
+                    rows={4}
+                  />
+                  <div className="text-[10px] text-gray-400 font-mono text-right mt-1 pr-1">
+                    {form.description.length} / 500
+                  </div>
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm font-semibold mb-1.5 block">{t('categoryLabel')}</label>
+                  <label className="text-sm font-bold text-[#6B1D1D] mb-1.5 flex items-center gap-1.5">
+                    <LayoutGrid className="h-4 w-4 text-[#C31F26]" />
+                    {t('categoryLabel')}
+                  </label>
                   <select
                     value={form.category}
                     onChange={(e) => setForm({ ...form, category: e.target.value })}
-                    className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground"
+                    className="w-full px-3 py-2 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground h-10"
                   >
                     {CATEGORIES.map((cat) => (
                       <option key={cat} value={cat}>
@@ -361,11 +417,14 @@ export function ReportIssueModal({
                 </div>
 
                 <div>
-                  <label className="text-sm font-semibold mb-1.5 block">{t('priorityLabel')}</label>
+                  <label className="text-sm font-bold text-[#6B1D1D] mb-1.5 flex items-center gap-1.5">
+                    <Flag className="h-4 w-4 text-[#C31F26]" />
+                    {t('priorityLabel')}
+                  </label>
                   <select
                     value={form.priority}
                     onChange={(e) => setForm({ ...form, priority: e.target.value })}
-                    className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground"
+                    className="w-full px-3 py-2 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground h-10"
                   >
                     {PRIORITIES.map((p) => (
                       <option key={p} value={p}>
@@ -378,8 +437,11 @@ export function ReportIssueModal({
 
               {/* Photos Section Embedded Inline */}
               <div className="space-y-3 pt-2">
-                <label className="text-sm font-semibold block">{t('addPhotosLabel')}</label>
-                <div className="border-2 border-dashed border-border rounded-lg p-4 text-center bg-accent/5">
+                <label className="text-sm font-bold text-[#6B1D1D] mb-1.5 flex items-center gap-1.5">
+                  <Camera className="h-4 w-4 text-[#C31F26]" />
+                  {t('addPhotosLabel')}
+                </label>
+                <div className="border-2 border-dashed border-gray-200 bg-[#FAF4EB]/10 rounded-2xl p-5 text-center">
                   <input
                     ref={fileInputRef}
                     type="file"
@@ -393,21 +455,30 @@ export function ReportIssueModal({
                       type="button"
                       variant="outline"
                       onClick={takePhoto}
-                      className="flex-1 font-bold h-10 bg-primary/5 border-primary/20 hover:bg-primary/10 text-primary flex items-center justify-center gap-2"
+                      className="flex-1 font-bold h-14 bg-[#FAF4EB]/30 border-[#C31F26]/20 hover:bg-[#FAF4EB]/60 text-[#C31F26] rounded-xl flex items-center justify-center gap-2.5 animate-none"
                     >
-                      📷 {language === 'ta' ? 'கேமரா மூலம் படம் எடு' : 'Take Photo (Camera)'}
+                      <Camera className="h-5 w-5 text-[#C31F26] flex-shrink-0" />
+                      <div className="flex flex-col items-start leading-tight">
+                        <span className="text-sm font-bold">{language === 'ta' ? 'படம் எடு' : 'Take Photo'}</span>
+                        <span className="text-[10px] text-gray-400 font-medium">{language === 'ta' ? 'கேமரா மூலம்' : 'Using Camera'}</span>
+                      </div>
                     </Button>
                     <Button
                       type="button"
                       variant="outline"
                       onClick={() => fileInputRef.current?.click()}
-                      className="flex-1 font-semibold h-10 flex items-center justify-center gap-2"
+                      className="flex-1 font-semibold h-14 border-gray-200 hover:bg-gray-50 text-gray-700 rounded-xl flex items-center justify-center gap-2.5"
                     >
-                      📁 {language === 'ta' ? 'கேலரியிலிருந்து தேர்ந்தெடு' : 'Choose from Gallery'}
+                      <LucideImage className="h-5 w-5 text-gray-500 flex-shrink-0" />
+                      <div className="flex flex-col items-start leading-tight">
+                        <span className="text-sm font-semibold">{language === 'ta' ? 'கேலரியிலிருந்து எடு' : 'Choose from Gallery'}</span>
+                        <span className="text-[10px] text-gray-400 font-medium">{language === 'ta' ? 'சாதனத்திலிருந்து பதிவேற்று' : 'Upload from device'}</span>
+                      </div>
                     </Button>
                   </div>
-                  <p className="text-[10px] sm:text-xs text-muted-foreground mt-2">
-                    {t('multiplePhotosAllowed')}
+                  <p className="text-[10px] sm:text-xs text-muted-foreground mt-3 flex items-center justify-center gap-1.5">
+                    <Info className="h-3.5 w-3.5 text-[#C31F26]" />
+                    {language === 'ta' ? 'நீங்கள் பல புகைப்படங்களைத் தேர்ந்தெடுக்கலாம் (அதிகபட்சம் 5)' : 'You can select multiple photos (Max 5)'}
                   </p>
                 </div>
 
@@ -425,7 +496,7 @@ export function ReportIssueModal({
                           onClick={() => removePhoto(index)}
                           className="absolute top-1 right-1 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-90 hover:opacity-100"
                         >
-                          ✕
+                          <X className="h-3 w-3" />
                         </button>
                       </div>
                     ))}
@@ -445,16 +516,22 @@ export function ReportIssueModal({
           </div>
 
           {/* Action buttons sitting at the bottom of the CardContent */}
-          <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t mt-4">
-            <Button type="button" variant="outline" onClick={onClose} className="w-full sm:flex-1 h-10 font-semibold text-xs sm:text-sm">
+          <div className="flex flex-col sm:flex-row gap-4 pt-5 border-t mt-6">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onClose}
+              className="w-full sm:flex-1 h-12 font-bold text-sm bg-[#FAF4EB]/30 border-gray-200 text-gray-700 hover:bg-[#FAF4EB]/60 rounded-xl"
+            >
               {t('cancelBtn')}
             </Button>
             <Button
               type="submit"
               disabled={loading}
-              className="w-full sm:flex-1 h-10 font-semibold text-xs sm:text-sm bg-primary text-primary-foreground hover:bg-primary/95"
+              className="w-full sm:flex-1 h-12 font-bold text-sm bg-[#C31F26] hover:bg-[#a0191f] text-white rounded-xl flex items-center justify-center gap-2"
             >
-              {loading ? t('submittingText') : t('submitReportBtn')}
+              <Send className="h-4 w-4 text-white" />
+              {loading ? t('submittingText') : language === 'ta' ? 'புகாரைச் சமர்ப்பி' : 'Submit Report'}
             </Button>
           </div>
         </form>
@@ -462,3 +539,4 @@ export function ReportIssueModal({
     </Card>
   );
 }
+

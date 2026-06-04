@@ -25,24 +25,17 @@ const getMarkerIcon = (status: Complaint['status']) => {
     html: `
       <div style="
         background-color: ${color};
-        width: 32px;
-        height: 32px;
+        width: 24px;
+        height: 24px;
         border-radius: 50%;
         border: 3px solid white;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        color: white;
-        font-size: 14px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.35);
       ">
-        📍
       </div>
     `,
-    iconSize: [38, 38],
-    iconAnchor: [19, 38],
-    popupAnchor: [0, -38],
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
+    popupAnchor: [0, -12],
     className: 'complaint-marker',
   });
 };

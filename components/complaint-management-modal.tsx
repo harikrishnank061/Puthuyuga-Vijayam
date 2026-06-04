@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import L from 'leaflet';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import { X } from 'lucide-react';
 
 const NEXT_STATUS: Record<Complaint['status'], Complaint['status'] | null> = {
   open: 'assigned',
@@ -33,24 +34,17 @@ const getMarkerIcon = (status: Complaint['status']) => {
     html: `
       <div style="
         background-color: ${color};
-        width: 28px;
-        height: 28px;
+        width: 24px;
+        height: 24px;
         border-radius: 50%;
-        border: 2px solid white;
+        border: 3px solid white;
         box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        color: white;
-        font-size: 12px;
       ">
-        📍
       </div>
     `,
-    iconSize: [32, 32],
-    iconAnchor: [16, 32],
-    popupAnchor: [0, -32],
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
+    popupAnchor: [0, -12],
     className: 'complaint-marker',
   });
 };
@@ -149,7 +143,7 @@ export function ComplaintManagementModal({
             onClick={onClose}
             className="text-primary-foreground hover:bg-primary/80"
           >
-            ✕
+            <X className="h-4 w-4" />
           </Button>
         </CardHeader>
 

@@ -178,6 +178,18 @@ export async function updateComplaintStatus(
   return res.json();
 }
 
+export async function deleteComplaint(id: string): Promise<void> {
+  const res = await fetch(getApiUrl(`/api/complaints/${id}`), {
+    method: 'DELETE',
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.error || 'Failed to delete complaint');
+  }
+}
+
+
 // Notification Management (Live API Calls)
 export async function createNotification(
   complaintId: string,

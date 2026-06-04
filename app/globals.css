@@ -1,7 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import 'leaflet/dist/leaflet.css';
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;600;700;800&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
@@ -42,7 +41,7 @@
   --sidebar-accent-foreground: #111111;
   --sidebar-border: oklch(0.45 0.1 158.5);
   --sidebar-ring: #F2D409;
-  
+
   /* Status Colors */
   --status-open: oklch(0.35 0.15 158.5);
   --status-assigned: oklch(0.60 0.15 200);
@@ -84,7 +83,7 @@
   --sidebar-accent-foreground: #111111;
   --sidebar-border: oklch(0.28 0 0);
   --sidebar-ring: #F2D409;
-  
+
   --status-open: #C31F26;
   --status-assigned: oklch(0.60 0.15 200);
   --status-in-progress: #F2D409;
@@ -137,33 +136,34 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
-  
+
   /* Professional card styling */
   [class*="card"] {
     @apply transition-all duration-200;
   }
-  
+
   /* Button enhancements */
   button {
     @apply transition-all duration-200;
   }
-  
+
   /* Input enhancements */
   input,
   textarea,
   select {
     @apply transition-colors duration-200;
   }
-  
+
   input:focus,
   textarea:focus,
   select:focus {
     @apply ring-2 ring-primary ring-offset-0;
   }
-  
+
   /* Badge styling */
   [class*="badge"] {
     @apply font-medium text-xs px-3 py-1 rounded-full;
@@ -175,7 +175,7 @@
   .slide-in {
     animation: slideIn 0.3s ease-out;
   }
-  
+
   .fade-in {
     animation: fadeIn 0.3s ease-out;
   }
@@ -186,6 +186,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -196,6 +197,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -290,10 +292,13 @@
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
+
 /* Hide scrollbar for IE, Edge and Firefox */
 .scrollbar-none {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 /* ======== Auth Page Styles ======== */
@@ -326,13 +331,20 @@
   align-items: center;
   justify-content: center;
   border: 4px solid #C31F26;
-  box-shadow: 0 4px 20px rgba(195, 31, 38, 0.2), 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 20px rgba(195, 31, 38, 0.2), 0 2px 8px rgba(0, 0, 0, 0.1);
   animation: emblemPulse 3s ease-in-out infinite;
 }
 
 @keyframes emblemPulse {
-  0%, 100% { box-shadow: 0 4px 20px rgba(195, 31, 38, 0.2), 0 2px 8px rgba(0,0,0,0.1); }
-  50% { box-shadow: 0 4px 30px rgba(195, 31, 38, 0.35), 0 2px 12px rgba(0,0,0,0.15); }
+
+  0%,
+  100% {
+    box-shadow: 0 4px 20px rgba(195, 31, 38, 0.2), 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  50% {
+    box-shadow: 0 4px 30px rgba(195, 31, 38, 0.35), 0 2px 12px rgba(0, 0, 0, 0.15);
+  }
 }
 
 .auth-role-card {
@@ -386,6 +398,28 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive background image class for auth views */
+.auth-tcm-bg {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('/tcm.png');
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: 100% auto;
+  background-color: #FAF5EB;
+}
+
+@media (min-width: 768px) {
+  .auth-tcm-bg {
+    background-size: 100% 100%;
+  }
 }

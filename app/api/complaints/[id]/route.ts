@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import Complaint from '@/lib/models/Complaint';
+import Notification from '@/lib/models/Notification';
 
 export async function PATCH(
   request: Request,
@@ -70,3 +71,28 @@ export async function PATCH(
     return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
   }
 }
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    await connectToDatabase();
+    const { id } = await params;
+
+    // Delete associated notifications first
+    await Notification.deleteMany({ complaintId: id });
+
+    // Delete the complaint
+    const complaint = await Complaint.findByIdAndDelete(id);
+    if (!complaint) {
+      return NextResponse.json({ error: 'Complaint not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: 'Complaint and associated notifications deleted successfully' });
+  } catch (error: any) {
+    console.error('Delete Complaint API Error:', error);
+    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
+  }
+}
+
