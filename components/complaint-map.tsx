@@ -94,9 +94,6 @@ export function ComplaintMap({ complaints, onMarkerClick, selectedComplaintId }:
             key={complaint.id}
             position={[complaint.latitude, complaint.longitude]}
             icon={getMarkerIcon(complaint.status)}
-            eventHandlers={{
-              click: () => onMarkerClick?.(complaint),
-            }}
           >
             <Popup closeButton={true} className="complaint-popup">
               <div className="w-72 max-w-sm p-3 space-y-2">
@@ -123,7 +120,17 @@ export function ComplaintMap({ complaints, onMarkerClick, selectedComplaintId }:
                 {onMarkerClick && (
                   <div className="pt-2">
                     <Button
-                      onClick={() => onMarkerClick(complaint)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        onMarkerClick(complaint);
+                      }}
+                      onTouchStart={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onTouchEnd={(e) => {
+                        e.stopPropagation();
+                      }}
                       size="sm"
                       className="w-full bg-primary text-primary-foreground hover:bg-primary/95 text-xs font-semibold py-1.5"
                     >

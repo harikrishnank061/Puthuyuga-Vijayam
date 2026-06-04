@@ -3,7 +3,7 @@
 
 Write-Host "Starting APK compilation process..." -ForegroundColor Cyan
 
-# 1. Temporarily backup app/api directory
+# 1. Temporarily backup app/api directory and middleware.ts
 if (Test-Path "app/api") {
     Write-Host "Backing up app/api to avoid static export errors..." -ForegroundColor Yellow
     if (Test-Path "api_routes_backup") {
@@ -11,6 +11,10 @@ if (Test-Path "app/api") {
     }
     New-Item -ItemType Directory -Force -Path "api_routes_backup" | Out-Null
     Move-Item -Path "app/api/*" -Destination "api_routes_backup/" -Force
+}
+if (Test-Path "middleware.ts") {
+    Write-Host "Backing up middleware.ts to avoid static export errors..." -ForegroundColor Yellow
+    Rename-Item -Path "middleware.ts" -NewName "middleware.ts.bak" -Force
 }
 
 # 2. Build the Next.js application in static export mode
@@ -21,11 +25,15 @@ npm run build
 
 $buildStatus = $LASTEXITCODE
 
-# 3. Restore app/api directory immediately
+# 3. Restore app/api directory and middleware.ts immediately
 if (Test-Path "api_routes_backup") {
     Write-Host "Restoring app/api..." -ForegroundColor Yellow
     Move-Item -Path "api_routes_backup/*" -Destination "app/api/" -Force
     Remove-Item -Path "api_routes_backup" -Recurse -Force
+}
+if (Test-Path "middleware.ts.bak") {
+    Write-Host "Restoring middleware.ts..." -ForegroundColor Yellow
+    Rename-Item -Path "middleware.ts.bak" -NewName "middleware.ts" -Force
 }
 
 if ($buildStatus -ne 0) {
