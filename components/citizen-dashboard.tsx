@@ -419,9 +419,6 @@ export function CitizenDashboard() {
                   {t('appTitle')}
                 </h1>
                 <p className="text-[10px] text-gray-500 font-bold mt-1 leading-none">
-                  {t('rajapalayam')}
-                </p>
-                <p className="text-[9px] text-gray-400 font-semibold leading-none mt-0.5">
                   {t('publicGrievancePortal')}
                 </p>
               </div>

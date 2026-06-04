@@ -48,22 +48,26 @@ const DB_KEYS = {
   CURRENT_ADMIN: 'fix-my-street-current-admin',
 };
 
-// Get dynamic API URL depending on whether the app runs as a mobile app or a web app
+// Get dynamic API URL depending on the runtime context
 export function getApiUrl(path: string): string {
   if (typeof window === 'undefined') {
+    // Server-side (Next.js API routes calling each other) — use relative path
     return path;
   }
 
-  // Detect if running inside the native mobile app wrapper (Capacitor)
-  const isCapacitor = !!(window as any).Capacitor;
-  const isCapacitorProtocol = window.location.protocol.startsWith('capacitor');
-  const isAndroidWebView = window.location.hostname === 'localhost' && window.location.port !== '3000';
-  
-  const isMobile = isCapacitor || isCapacitorProtocol || isAndroidWebView;
-  
-  const baseUrl = isMobile 
-    ? (process.env.NEXT_PUBLIC_API_URL || 'https://www.puthuyugavijayam.in').replace(/\/$/, '')
-    : '';
+  // If running on localhost dev server, use relative paths
+  const isLocalDev =
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1' ||
+    window.location.hostname === '0.0.0.0';
+
+  if (isLocalDev) {
+    return path; // Next.js dev server handles /api/* routes
+  }
+
+  // For all other contexts (hosted website browser OR Capacitor APK),
+  // always call the absolute production API URL
+  const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://www.puthuyugavijayam.in').replace(/\/$/, '');
   return `${baseUrl}${path}`;
 }
 
