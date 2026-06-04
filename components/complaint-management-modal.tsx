@@ -53,10 +53,12 @@ export function ComplaintManagementModal({
   complaint,
   onClose,
   onStatusUpdate,
+  isReadOnly = false,
 }: {
   complaint: Complaint;
   onClose: () => void;
-  onStatusUpdate: () => void;
+  onStatusUpdate?: () => void;
+  isReadOnly?: boolean;
 }) {
   const { t, language } = useLanguage();
   const [loading, setLoading] = useState(false);
@@ -106,7 +108,7 @@ export function ComplaintManagementModal({
 
       setNote('');
       setAssignee('');
-      onStatusUpdate();
+      onStatusUpdate?.();
     } catch (err: any) {
       setError(err.message || 'Error updating status');
     } finally {
@@ -149,10 +151,10 @@ export function ComplaintManagementModal({
 
         {/* Tabs */}
         <div className="border-b flex bg-muted/30 w-full overflow-x-auto scrollbar-none">
-          {(['details', 'timeline', 'actions'] as const).map(tab => (
+          {(['details', 'timeline', ...(isReadOnly ? [] : ['actions'])] as const).map(tab => (
             <button
               key={tab}
-              onClick={() => setSelectedTab(tab)}
+              onClick={() => setSelectedTab(tab as 'details' | 'timeline' | 'actions')}
               className={`flex-1 text-center px-3 sm:px-6 py-3 font-semibold text-xs sm:text-sm transition-colors border-b-2 whitespace-nowrap ${
                 selectedTab === tab
                   ? 'border-primary text-primary bg-background'

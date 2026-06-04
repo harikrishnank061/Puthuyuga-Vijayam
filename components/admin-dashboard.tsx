@@ -138,12 +138,14 @@ export function AdminDashboard() {
       : 'Please enter Admin Password to confirm deletion:';
     const password = window.prompt(pwdPrompt);
     if (password === 'ADMIN123') {
+      setCitizens((prev) => prev.filter((c) => c.id !== citizenId));
       try {
         await deleteCitizen(citizenId);
         await loadData();
         triggerSuccess(language === 'ta' ? 'பயனர் வெற்றிகரமாக நீக்கப்பட்டார்.' : 'User deleted successfully.');
       } catch (error) {
         console.error('Failed to delete citizen:', error);
+        await loadData();
       }
     } else if (password !== null) {
       triggerError(language === 'ta' ? 'தவறான கடவுச்சொல். நீக்கம் ரத்து செய்யப்பட்டது.' : 'Incorrect password. Deletion cancelled.');
@@ -450,13 +452,16 @@ export function AdminDashboard() {
                         onClick={async (e) => {
                           e.stopPropagation();
                           if (window.confirm(t('confirmDelete'))) {
+                            const deletedId = complaint.id;
+                            setComplaints((prev) => prev.filter((c) => c.id !== deletedId));
                             try {
-                              await deleteComplaint(complaint.id);
+                              await deleteComplaint(deletedId);
                               await loadData();
                               triggerSuccess(language === 'ta' ? 'புகார் வெற்றிகரமாக நீக்கப்பட்டது.' : 'Complaint deleted successfully.');
                             } catch (error) {
                               console.error('Failed to delete complaint:', error);
                               triggerError(language === 'ta' ? 'புகாரை நீக்குவதில் தோல்வி.' : 'Failed to delete complaint.');
+                              await loadData();
                             }
                           }
                         }}

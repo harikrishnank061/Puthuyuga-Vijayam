@@ -62,7 +62,7 @@ export function getApiUrl(path: string): string {
   const isMobile = isCapacitor || isCapacitorProtocol || isAndroidWebView;
   
   const baseUrl = isMobile 
-    ? (process.env.NEXT_PUBLIC_API_URL || 'http://192.168.1.33:3000')
+    ? (process.env.NEXT_PUBLIC_API_URL || 'https://www.puthuyugavijayam.in').replace(/\/$/, '')
     : '';
   return `${baseUrl}${path}`;
 }
@@ -89,7 +89,7 @@ export async function registerCitizen(name: string, mobileNumber: string, passwo
 }
 
 export async function getCitizens(): Promise<Citizen[]> {
-  const res = await fetch(getApiUrl('/api/citizens'));
+  const res = await fetch(getApiUrl('/api/citizens'), { cache: 'no-store' });
   if (!res.ok) throw new Error('Failed to fetch citizens');
   return res.json();
 }
@@ -141,7 +141,7 @@ export async function createComplaint(citizenId: string, data: Partial<Complaint
 }
 
 export async function getComplaints(): Promise<Complaint[]> {
-  const res = await fetch(getApiUrl('/api/complaints'));
+  const res = await fetch(getApiUrl('/api/complaints'), { cache: 'no-store' });
   if (!res.ok) throw new Error('Failed to fetch complaints');
   return res.json();
 }
@@ -152,7 +152,7 @@ export async function getComplaintById(id: string): Promise<Complaint | null> {
 }
 
 export async function getComplaintsByCitizen(citizenId: string): Promise<Complaint[]> {
-  const res = await fetch(getApiUrl(`/api/complaints?citizenId=${citizenId}`));
+  const res = await fetch(getApiUrl(`/api/complaints?citizenId=${citizenId}`), { cache: 'no-store' });
   if (!res.ok) throw new Error('Failed to fetch citizen complaints');
   return res.json();
 }
@@ -207,13 +207,13 @@ export async function createNotification(
 }
 
 export async function getNotifications(): Promise<LocalNotification[]> {
-  const res = await fetch(getApiUrl('/api/notifications'));
+  const res = await fetch(getApiUrl('/api/notifications'), { cache: 'no-store' });
   if (!res.ok) throw new Error('Failed to fetch notifications');
   return res.json();
 }
 
 export async function getNotificationsByCitizen(citizenId: string): Promise<LocalNotification[]> {
-  const res = await fetch(getApiUrl(`/api/notifications?citizenId=${citizenId}`));
+  const res = await fetch(getApiUrl(`/api/notifications?citizenId=${citizenId}`), { cache: 'no-store' });
   if (!res.ok) throw new Error('Failed to fetch notifications for citizen');
   return res.json();
 }

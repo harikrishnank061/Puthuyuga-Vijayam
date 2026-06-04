@@ -3,13 +3,14 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { useLanguage } from '@/lib/i18n';
-import { getComplaintsByCitizen, getNotificationsByCitizen, markNotificationAsRead, deleteComplaint, getCitizenById } from '@/lib/db';
+import { getComplaints, getNotificationsByCitizen, markNotificationAsRead, deleteComplaint, getCitizenById } from '@/lib/db';
 import { ComplaintMap } from '@/components/complaint-map';
 import type { Citizen, Complaint, LocalNotification } from '@/lib/db';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ReportIssueModal } from './report-issue-modal';
+import { ComplaintManagementModal } from './complaint-management-modal';
 import {
   Menu, X, Globe, LogOut, ShieldCheck, PhoneCall, Info,
   Plus, Map, ClipboardList, Bell, User, Building2,
@@ -32,6 +33,7 @@ export function CitizenDashboard() {
 
   const [showReportModal, setShowReportModal] = useState(false);
   const [selectedComplaint, setSelectedComplaint] = useState<Complaint | null>(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
   const [activeTab, setActiveTab] = useState<'dashboard' | 'reports' | 'updates'>('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
@@ -59,8 +61,8 @@ export function CitizenDashboard() {
             setCitizen(dbCitizen);
             localStorage.setItem('fix-my-street-current-citizen', JSON.stringify(dbCitizen));
           }
-          const citizenComplaints = await getComplaintsByCitizen(currentCitizen.id);
-          setComplaints(citizenComplaints);
+          const allComplaints = await getComplaints();
+          setComplaints(allComplaints);
           const citizenNotifications = await getNotificationsByCitizen(currentCitizen.id);
           setNotifications(citizenNotifications);
         } catch (error) {
@@ -97,7 +99,7 @@ export function CitizenDashboard() {
     setShowReportModal(false);
     if (currentCitizen) {
       try {
-        const updated = await getComplaintsByCitizen(currentCitizen.id);
+        const updated = await getComplaints();
         setComplaints(updated);
       } catch (error) {
         console.error('Failed to update complaints after report:', error);
@@ -340,14 +342,14 @@ export function CitizenDashboard() {
       {/* Drawer Backdrop */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/60 z-[999]"
+          className="fixed inset-0 bg-black/60 z-[1020]"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Drawer Container */}
       <div
-        className={`fixed inset-y-0 left-0 w-[320px] max-w-[85vw] bg-white z-[1000] shadow-2xl transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        className={`fixed inset-y-0 left-0 w-[320px] max-w-[85vw] bg-white z-[1030] shadow-2xl transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
       >
         <SidebarContent />
@@ -356,7 +358,7 @@ export function CitizenDashboard() {
       {/* ── Main View Content ── */}
       <div className="flex-1 flex flex-col min-w-0 bg-[#FBF8F3]">
         {/* Desktop Header */}
-        <header className="hidden lg:flex items-center justify-between px-8 py-5 border-b border-[#C31F26]/10 bg-white sticky top-0 z-50">
+        <header className="hidden lg:flex items-center justify-between px-8 py-5 border-b border-[#C31F26]/10 bg-white sticky top-0 z-[1010]">
           <div className="flex items-center gap-4 text-left">
             <Button
               variant="ghost"
@@ -396,7 +398,7 @@ export function CitizenDashboard() {
         </header>
 
         {/* Mobile Header */}
-        <header className="lg:hidden sticky top-0 bg-white border-b border-[#C31F26]/10 z-50 px-4 py-3.5 flex items-center justify-between">
+        <header className="lg:hidden sticky top-0 bg-white border-b border-[#C31F26]/10 z-[1010] px-4 py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Button
               variant="ghost"
@@ -528,32 +530,16 @@ export function CitizenDashboard() {
                 {/* Map Display Panel */}
                 <Card className="border-[#C31F26]/10 shadow-sm rounded-2xl overflow-hidden bg-white">
                   <CardContent className="p-4">
-                    {complaints.length > 0 ? (
-                      <div className="h-[420px] rounded-xl overflow-hidden border border-[#C31F26]/15">
-                        <ComplaintMap
-                          complaints={complaints}
-                          onMarkerClick={setSelectedComplaint}
-                          selectedComplaintId={selectedComplaint?.id}
-                        />
-                      </div>
-                    ) : (
-                      <div className="text-center py-16">
-                        <div className="w-16 h-16 bg-[#FAF4EB] rounded-full flex items-center justify-center mx-auto mb-4">
-                          <Map className="h-8 w-8 text-[#C31F26]/60" />
-                        </div>
-                        <h3 className="text-lg font-bold text-[#6B1D1D] mb-1">{t('noComplaints')}</h3>
-                        <p className="text-sm text-gray-500 font-semibold mb-6">
-                          {t('noReportsMapDesc')}
-                        </p>
-                        <Button
-                          onClick={() => setShowReportModal(true)}
-                          className="bg-[#C31F26] hover:bg-[#a0191f] text-white font-bold rounded-xl px-5 h-11"
-                        >
-                          <Plus className="h-4 w-4 mr-1.5" />
-                          {t('reportNewIssue')}
-                        </Button>
-                      </div>
-                    )}
+                    <div className="h-[420px] rounded-xl overflow-hidden border border-[#C31F26]/15">
+                      <ComplaintMap
+                        complaints={complaints}
+                        onMarkerClick={(complaint) => {
+                          setSelectedComplaint(complaint);
+                          setShowDetailModal(true);
+                        }}
+                        selectedComplaintId={selectedComplaint?.id}
+                      />
+                    </div>
                   </CardContent>
                 </Card>
 
@@ -658,6 +644,22 @@ export function CitizenDashboard() {
                     </div>
                   </div>
                 </div>
+
+                {/* Map Display Panel on Mobile */}
+                <Card className="border-[#C31F26]/10 shadow-sm rounded-2xl overflow-hidden bg-white">
+                  <CardContent className="p-3">
+                    <div className="h-[280px] rounded-xl overflow-hidden border border-[#C31F26]/15">
+                      <ComplaintMap
+                        complaints={complaints}
+                        onMarkerClick={(complaint) => {
+                          setSelectedComplaint(complaint);
+                          setShowDetailModal(true);
+                        }}
+                        selectedComplaintId={selectedComplaint?.id}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
 
                 {/* 4 Stats Cards Grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -834,17 +836,15 @@ export function CitizenDashboard() {
 
           {activeTab === 'reports' && (
             <div className="space-y-4">
-              <h2 className="text-base font-extrabold text-[#6B1D1D] mb-4 text-left hidden lg:block">{t('myReportsCount')} ({complaints.length})</h2>
+              <h2 className="text-base font-extrabold text-[#6B1D1D] mb-4 text-left hidden lg:block">
+                {language === 'ta' ? `அனைத்து புகார்கள் (${complaints.length})` : `All Community Reports (${complaints.length})`}
+              </h2>
               {complaints.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {complaints.map((complaint) => (
                     <Card
                       key={complaint.id}
-                      className="cursor-pointer hover:shadow-md transition-all border-[#C31F26]/10 rounded-2xl overflow-hidden hover:border-[#C31F26]/30 active:scale-[0.99] text-left bg-white"
-                      onClick={() => {
-                        setSelectedComplaint(complaint);
-                        setActiveTab('dashboard');
-                      }}
+                      className="hover:shadow-md transition-all border-[#C31F26]/10 rounded-2xl overflow-hidden hover:border-[#C31F26]/30 text-left bg-white"
                     >
                       <CardContent className="p-4.5">
                         <div className="flex justify-between gap-4">
@@ -872,29 +872,49 @@ export function CitizenDashboard() {
                             />
                           )}
                         </div>
-                        <div className="flex justify-end mt-3.5 pt-3 border-t border-[#C31F26]/10">
+                        <div className="flex items-center justify-between mt-3.5 pt-3 border-t border-[#C31F26]/10">
+                          {/* View Details Button - always visible */}
                           <Button
-                            onClick={async (e) => {
+                            onClick={(e) => {
                               e.stopPropagation();
-                              if (window.confirm(t('confirmDelete'))) {
-                                try {
-                                  await deleteComplaint(complaint.id);
-                                  if (currentCitizen) {
-                                    const updated = await getComplaintsByCitizen(currentCitizen.id);
-                                    setComplaints(updated);
-                                  }
-                                } catch (error) {
-                                  console.error('Failed to delete report:', error);
-                                }
-                              }
+                              setSelectedComplaint(complaint);
+                              setShowDetailModal(true);
                             }}
                             variant="ghost"
                             size="sm"
-                            className="h-8 text-xs font-bold text-red-600 hover:bg-red-50 hover:text-red-700 rounded-xl flex items-center gap-1.5 px-3"
+                            className="h-8 text-xs font-bold text-[#C31F26] hover:bg-[#C31F26]/10 rounded-xl flex items-center gap-1.5 px-3"
                           >
-                            <Trash2 className="h-3.5 w-3.5" />
-                            {t('delete')}
+                            <Info className="h-3.5 w-3.5" />
+                            {language === 'ta' ? 'விவரங்கள் காண்க' : 'View Details'}
                           </Button>
+
+                          {/* Delete - only for owner */}
+                          {complaint.citizenId === currentCitizen?.id && (
+                            <Button
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                if (window.confirm(t('confirmDelete'))) {
+                                  const deletedId = complaint.id;
+                                  setComplaints((prev) => prev.filter((c) => c.id !== deletedId));
+                                  try {
+                                    await deleteComplaint(deletedId);
+                                    const updated = await getComplaints();
+                                    setComplaints(updated);
+                                  } catch (error) {
+                                    console.error('Failed to delete report:', error);
+                                    const updated = await getComplaints();
+                                    setComplaints(updated);
+                                  }
+                                }
+                              }}
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 text-xs font-bold text-red-600 hover:bg-red-50 hover:text-red-700 rounded-xl flex items-center gap-1.5 px-3"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                              {t('delete')}
+                            </Button>
+                          )}
                         </div>
                       </CardContent>
                     </Card>
@@ -1033,6 +1053,18 @@ export function CitizenDashboard() {
               />
             </div>
           </div>
+        )}
+
+        {/* ── Complaint Detail Modal (Read-Only) ── */}
+        {showDetailModal && selectedComplaint && (
+          <ComplaintManagementModal
+            complaint={selectedComplaint}
+            onClose={() => {
+              setShowDetailModal(false);
+              setSelectedComplaint(null);
+            }}
+            isReadOnly={true}
+          />
         )}
 
         {/* ── Privacy Policy Modal ── */}
