@@ -55,20 +55,21 @@ export function getApiUrl(path: string): string {
     return path;
   }
 
-  // If running on localhost dev server, use relative paths
-  const isLocalDev =
-    window.location.hostname === 'localhost' ||
-    window.location.hostname === '127.0.0.1' ||
-    window.location.hostname === '0.0.0.0';
+  // Detect if running inside the native mobile app wrapper (Capacitor)
+  const isCapacitor = !!(window as any).Capacitor;
+  const isCapacitorProtocol = window.location.protocol.startsWith('capacitor');
+  const isAndroidWebView = window.location.hostname === 'localhost' && window.location.port !== '3000';
+  const isMobile = isCapacitor || isCapacitorProtocol || isAndroidWebView;
 
-  if (isLocalDev) {
-    return path; // Next.js dev server handles /api/* routes
+  if (isMobile) {
+    // Inside Capacitor app wrapper: always call the absolute production API URL
+    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://www.puthuyugavijayam.in').replace(/\/$/, '');
+    return `${baseUrl}${path}`;
   }
 
-  // For all other contexts (hosted website browser OR Capacitor APK),
-  // always call the absolute production API URL
-  const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://www.puthuyugavijayam.in').replace(/\/$/, '');
-  return `${baseUrl}${path}`;
+  // In all standard web browsers (hosted website OR local development):
+  // Always use relative paths to avoid any CORS or redirect blocks!
+  return path;
 }
 
 // Initialize database (No-op since backend is live MongoDB)
