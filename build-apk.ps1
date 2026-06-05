@@ -57,8 +57,8 @@ if ($gradleStatus -ne 0) {
 # 6. Copy final APK to the root
 if (Test-Path "android/app/build/outputs/apk/debug/app-debug.apk") {
     Write-Host "Copying APK to project root..." -ForegroundColor Green
-    Copy-Item -Path "android/app/build/outputs/apk/debug/app-debug.apk" -Destination "fix-my-street.apk" -Force
-    Write-Host "SUCCESS: APK generated at fix-my-street.apk" -ForegroundColor Green
+    Copy-Item -Path "android/app/build/outputs/apk/debug/app-debug.apk" -Destination "Puthuyugavijayam.apk" -Force
+    Write-Host "SUCCESS: APK generated at Puthuyugavijayam.apk" -ForegroundColor Green
 } else {
     Write-Error "APK file was not found in Gradle build outputs!"
     exit 1
