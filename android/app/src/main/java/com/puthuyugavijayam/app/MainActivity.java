@@ -1,4 +1,4 @@
-package com.fixmystreet.app;
+package com.puthuyugavijayam.app;
 
 import com.getcapacitor.BridgeActivity;
 
