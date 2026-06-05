@@ -483,7 +483,7 @@ export function ReportIssueModal({
                 </div>
 
                 {photos.length > 0 && (
-                  <div className="grid grid-cols-4 gap-2">
+                  <div className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-5 gap-2">
                     {photos.map((photo, index) => (
                       <div key={index} className="relative group rounded-md overflow-hidden border border-border">
                         <img
@@ -516,7 +516,7 @@ export function ReportIssueModal({
           </div>
 
           {/* Action buttons sitting at the bottom of the CardContent */}
-          <div className="flex flex-col sm:flex-row gap-4 pt-5 border-t mt-6">
+          <div className="flex flex-col sm:flex-row gap-4 pt-5 border-t mt-6 pb-[calc(env(safe-area-inset-bottom,0px)+8px)]">
             <Button
               type="button"
               variant="outline"

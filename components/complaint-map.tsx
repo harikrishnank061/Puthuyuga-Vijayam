@@ -96,7 +96,7 @@ export function ComplaintMap({ complaints, onMarkerClick, selectedComplaintId }:
             icon={getMarkerIcon(complaint.status)}
           >
             <Popup closeButton={true} className="complaint-popup">
-              <div className="w-72 max-w-sm p-3 space-y-2">
+              <div className="w-64 sm:w-72 max-w-[calc(100vw-60px)] p-3 space-y-2">
                 <div>
                   <StatusBadge status={complaint.status} />
                 </div>

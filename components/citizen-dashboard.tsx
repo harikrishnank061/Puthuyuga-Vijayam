@@ -188,7 +188,7 @@ export function CitizenDashboard() {
   const SidebarContent = () => (
     <div className="flex flex-col h-full w-full bg-white text-card-foreground text-left">
       {/* Drawer Header with Logo */}
-      <div className="relative p-6 border-b border-[#C31F26]/10 flex flex-col items-center justify-center text-center">
+      <div className="relative p-6 pt-[calc(env(safe-area-inset-top,0px)+24px)] border-b border-[#C31F26]/10 flex flex-col items-center justify-center text-center safe-top">
         {/* Close button */}
         <button
           onClick={() => setSidebarOpen(false)}
@@ -284,7 +284,7 @@ export function CitizenDashboard() {
       </div>
 
       {/* Footer controls & utilities */}
-      <div className="p-4 border-t border-[#C31F26]/10 bg-white space-y-2">
+      <div className="p-4 pb-[calc(env(safe-area-inset-bottom,0px)+16px)] border-t border-[#C31F26]/10 bg-white space-y-2 safe-bottom">
         <div className="flex items-center justify-between px-2 py-1.5 text-xs font-bold text-gray-500">
           <span>{t('language')}</span>
           <button
@@ -398,7 +398,7 @@ export function CitizenDashboard() {
         </header>
 
         {/* Mobile Header */}
-        <header className="lg:hidden sticky top-0 bg-white border-b border-[#C31F26]/10 z-[1010] px-4 py-3.5 flex items-center justify-between">
+        <header className="lg:hidden sticky top-0 bg-white border-b border-[#C31F26]/10 z-[1010] px-4 pt-[calc(env(safe-area-inset-top,0px)+14px)] pb-3.5 flex items-center justify-between safe-top">
           <div className="flex items-center gap-3">
             <Button
               variant="ghost"
@@ -494,7 +494,7 @@ export function CitizenDashboard() {
                   style={{
                     backgroundImage: `url('/ChatGPT Image Jun 3, 2026, 05_13_05 PM-Photoroom.png')`,
                     backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'right 20px center',
+                    backgroundPosition: 'right 20px bottom',
                     backgroundSize: 'contain',
                     minHeight: '180px',
                   }}
@@ -527,7 +527,7 @@ export function CitizenDashboard() {
                 {/* Map Display Panel */}
                 <Card className="border-[#C31F26]/10 shadow-sm rounded-2xl overflow-hidden bg-white">
                   <CardContent className="p-4">
-                    <div className="h-[420px] rounded-xl overflow-hidden border border-[#C31F26]/15">
+                    <div className="h-[45vh] min-h-[350px] max-h-[550px] rounded-xl overflow-hidden border border-[#C31F26]/15">
                       <ComplaintMap
                         complaints={complaints}
                         onMarkerClick={(complaint) => {
@@ -607,8 +607,8 @@ export function CitizenDashboard() {
                   style={{
                     backgroundImage: `url('/ChatGPT Image Jun 3, 2026, 05_13_05 PM-Photoroom.png')`,
                     backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'right -10px center',
-                    backgroundSize: '45% auto',
+                    backgroundPosition: 'right -10px bottom',
+                    backgroundSize: 'contain',
                     minHeight: '140px',
                   }}
                 >
@@ -645,7 +645,7 @@ export function CitizenDashboard() {
                 {/* Map Display Panel on Mobile */}
                 <Card className="border-[#C31F26]/10 shadow-sm rounded-2xl overflow-hidden bg-white">
                   <CardContent className="p-3">
-                    <div className="h-[280px] rounded-xl overflow-hidden border border-[#C31F26]/15">
+                    <div className="h-[35vh] min-h-[250px] max-h-[400px] rounded-xl overflow-hidden border border-[#C31F26]/15">
                       <ComplaintMap
                         complaints={complaints}
                         onMarkerClick={(complaint) => {
@@ -987,7 +987,7 @@ export function CitizenDashboard() {
         </main>
 
         {/* Mobile Sticky Bottom Navigation Menu */}
-        <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#C31F26]/10 px-4 py-2 flex justify-around items-center z-[999] shadow-lg">
+        <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#C31F26]/10 px-4 pt-2 pb-[calc(env(safe-area-inset-bottom,0px)+8px)] flex justify-around items-center z-[999] shadow-lg safe-bottom">
           {/* Dashboard/Home */}
           <button
             onClick={() => setActiveTab('dashboard')}

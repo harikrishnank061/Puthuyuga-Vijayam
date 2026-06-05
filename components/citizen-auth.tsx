@@ -117,7 +117,7 @@ export function CitizenAuth() {
   };
 
   return (
-    <div className="min-h-screen md:h-screen w-full md:overflow-hidden flex flex-col justify-center md:justify-between py-6 md:py-0 md:pt-4 md:pb-0 px-4 sm:px-6 lg:px-8 relative auth-tcm-bg">
+    <div className="min-h-screen lg:h-screen w-full lg:overflow-hidden flex flex-col justify-center py-4 md:py-6 lg:py-0 lg:pt-4 lg:pb-0 px-4 sm:px-6 lg:px-8 relative auth-tcm-bg">
       {/* Language Toggle - Floating */}
       <div className="absolute top-4 right-4 z-50">
         <Button
@@ -131,17 +131,17 @@ export function CitizenAuth() {
       </div>
 
       {/* Main Container */}
-      <div className="container mx-auto max-w-6xl flex-1 flex flex-col justify-center md:justify-between gap-6 pt-2 pb-6 md:pb-0">
+      <div className="container mx-auto max-w-6xl flex-1 flex flex-col justify-center gap-2 md:gap-4 lg:gap-6 pt-1 pb-2 md:pb-4 lg:pb-0">
         
         {/* Top Header: Logo + Title + Dots */}
-        <div className="flex flex-col items-center text-center mt-1 mb-2 md:flex-shrink-0">
+        <div className="flex flex-col items-center text-center mt-1 mb-1">
           <div className="flex items-center justify-center gap-4 sm:gap-6 mb-1 w-full max-w-[340px] xs:max-w-[400px] sm:max-w-md">
             {/* Left Portrait: Mobile only */}
             <div className="md:hidden flex-shrink-0">
               <img 
                 src="/HIV838cbIAAghD0.jpg.jpeg" 
                 alt="Leader Left" 
-                className="w-20 h-20 xs:w-24 xs:h-24 sm:w-28 sm:h-28 rounded-full border-2 border-[#C31F26] object-cover shadow-lg"
+                className="w-16 h-16 xs:w-20 xs:h-20 sm:w-24 sm:h-24 rounded-full border-2 border-[#C31F26] object-cover shadow-lg"
               />
             </div>
             
@@ -149,7 +149,7 @@ export function CitizenAuth() {
             <img 
               src="/Puthuyuga Vijayam Logo.png" 
               alt="App Logo" 
-              className="w-24 h-24 xs:w-28 xs:h-28 sm:w-32 sm:h-32 md:w-32 md:h-32 object-contain filter drop-shadow-md transition-transform hover:scale-105"
+              className="w-20 h-20 xs:w-24 xs:h-24 sm:w-28 sm:h-28 md:w-24 md:h-24 object-contain filter drop-shadow-md transition-transform hover:scale-105"
             />
             
             {/* Right Portrait: Mobile only */}
@@ -157,38 +157,38 @@ export function CitizenAuth() {
               <img 
                 src="/WhatsApp Image 2026-06-03 at 16.32.56.jpeg" 
                 alt="Leader Right" 
-                className="w-20 h-20 xs:w-24 xs:h-24 sm:w-28 sm:h-28 rounded-full border-2 border-[#C31F26] object-cover shadow-lg"
+                className="w-16 h-16 xs:w-20 xs:h-20 sm:w-24 sm:h-24 rounded-full border-2 border-[#C31F26] object-cover shadow-lg"
               />
             </div>
           </div>
 
           <h1 
-            className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#6B1D1D] tracking-tight leading-tight mt-2.5 animate-fade-in" 
+            className="text-xl xs:text-2xl sm:text-3xl md:text-3xl font-extrabold text-[#6B1D1D] tracking-tight leading-tight mt-1.5 animate-fade-in" 
             style={{ fontFamily: "'Noto Sans Tamil', sans-serif" }}
           >
             புதுயுக விஜயம்
           </h1>
-          <div className="flex items-center justify-center gap-1.5 mt-3">
+          <div className="flex items-center justify-center gap-1.5 mt-2.5">
             <span className={`w-2.5 h-2.5 rounded-full transition-colors ${mode === 'login' ? 'bg-[#C31F26]' : 'bg-[#C31F26]/30'}`}></span>
             <span className={`w-2.5 h-2.5 rounded-full transition-colors ${mode === 'register' ? 'bg-[#C31F26]' : 'bg-[#C31F26]/30'}`}></span>
           </div>
         </div>
 
         {/* 2-Column Content Section */}
-        <div className="w-full max-w-[1100px] mx-auto md:mr-auto md:ml-6 lg:ml-12 flex flex-col md:flex-row items-center md:items-end justify-center md:justify-start gap-6 lg:gap-12 pt-2 pb-0 md:pb-0 md:mt-auto md:flex-shrink-0">
+        <div className="w-full max-w-[1100px] mx-auto lg:mr-auto lg:ml-12 flex flex-col lg:flex-row items-center lg:items-end justify-center lg:justify-start gap-4 lg:gap-10 pt-1 lg:mt-auto lg:flex-shrink-0">
           
           {/* Column 1: Left Branding Banner Image */}
-          <div className="hidden md:flex md:w-[48%] flex-shrink-0 justify-center md:justify-start md:self-end">
+          <div className="hidden lg:flex lg:w-[48%] flex-shrink-0 justify-center lg:justify-start lg:self-end">
             <img 
               src="/ChatGPT Image Jun 3, 2026, 05_13_05 PM-Photoroom.png" 
               alt="Branding Banner" 
-              className="w-full max-w-[320px] xs:max-w-[380px] sm:max-w-[420px] md:max-w-[480px] lg:max-w-[500px] md:max-h-[calc(100vh-210px)] object-contain object-bottom drop-shadow-2xl animate-fade-in"
+              className="w-full max-w-[320px] xs:max-w-[380px] sm:max-w-[420px] md:max-w-[480px] lg:max-w-[500px] max-h-[280px] md:max-h-[360px] lg:max-h-[calc(100vh-210px)] object-contain object-bottom drop-shadow-2xl animate-fade-in"
             />
           </div>
 
           {/* Column 2: Auth Form Card */}
-          <div className="w-full max-w-md flex-shrink-0 flex justify-center md:justify-start md:self-center md:mb-8">
-            <Card className="w-full shadow-2xl border-0 rounded-3xl overflow-hidden bg-white/95 backdrop-blur-sm md:h-[510px]">
+          <div className="w-full max-w-md flex-shrink-0 flex justify-center lg:justify-start lg:self-center lg:mb-8">
+            <Card className="w-full shadow-2xl border-0 rounded-3xl overflow-hidden bg-white/95 backdrop-blur-sm min-h-[400px] md:min-h-[440px]">
               <CardContent className="p-5 md:p-6 h-full flex flex-col justify-between">
                 <div className="flex-1 flex flex-col justify-center overflow-y-auto pr-1">
                   {/* Form Header */}

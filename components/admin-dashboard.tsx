@@ -193,9 +193,8 @@ export function AdminDashboard() {
   return (
     <div className="min-h-screen flex flex-col auth-page-bg">
 
-      {/* ── Header ── */}
-      <header className="sticky top-0 bg-white/95 backdrop-blur-md shadow-md border-b-4 border-[#C31F26]" style={{ zIndex: 9999 }}>
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
+      <header className="sticky top-0 bg-white/95 backdrop-blur-md shadow-md border-b-4 border-[#C31F26] safe-top" style={{ zIndex: 9999 }}>
+        <div className="container mx-auto px-4 pt-[calc(env(safe-area-inset-top,0px)+12px)] pb-3 flex items-center justify-between gap-4">
           {/* Left: Logo + Title */}
           <div className="flex items-center gap-3">
             <img 

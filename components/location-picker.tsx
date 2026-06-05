@@ -245,12 +245,12 @@ export function LocationPicker({
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-3 pt-2">
+      <div className="flex flex-col xs:flex-row gap-3 pt-2">
         <Button
           variant="outline"
           type="button"
           onClick={handleGetCurrentLocation}
-          className="w-full font-bold h-11 border-[#C31F26]/30 text-[#C31F26] hover:bg-[#C31F26]/5 rounded-xl flex items-center justify-center gap-1.5"
+          className="w-full xs:w-1/2 font-bold h-11 border-[#C31F26]/30 text-[#C31F26] hover:bg-[#C31F26]/5 rounded-xl flex items-center justify-center gap-1.5"
         >
           <Navigation className="h-4 w-4 rotate-45" /> 
           {t('currentLocation')}
@@ -258,7 +258,7 @@ export function LocationPicker({
         <Button
           type="button"
           onClick={handleConfirm}
-          className={`w-full h-11 text-white font-bold rounded-xl flex items-center justify-center transition-all duration-200 ${
+          className={`w-full xs:w-1/2 h-11 text-white font-bold rounded-xl flex items-center justify-center transition-all duration-200 ${
             confirmed 
               ? 'bg-emerald-600 hover:bg-emerald-700 shadow-md shadow-emerald-600/10' 
               : 'bg-[#C31F26] hover:bg-[#a0191f]'
